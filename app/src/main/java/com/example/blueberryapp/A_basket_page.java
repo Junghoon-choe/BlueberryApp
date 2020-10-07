@@ -247,6 +247,7 @@ public class A_basket_page extends AppCompatActivity {
 
 
 
+
         String FoodName = intent.getExtras().getString("FoodName");
         String FoodPrice = intent.getExtras().getString("FoodPrice");
         String FoodImage = intent.getExtras().getString("FoodImage");
