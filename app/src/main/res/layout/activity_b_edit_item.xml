@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".B_edit_item">
+
+    <!--여기에선 쉐어드에 저장된 값들을 불러와야함.-->
+
+    <ImageView
+        android:id="@+id/IV_상품사진"
+        android:layout_width="175dp"
+        android:layout_height="173dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="121dp"
+        android:padding="5dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toTopOf="@+id/Edit_ET_상품명변경"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <EditText
+        android:id="@+id/Edit_ET_상품명변경"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="상품명변경"
+        app:layout_constraintBottom_toTopOf="@+id/Edit_ET_상품가격변경"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/IV_상품사진" />
+
+    <EditText
+        android:id="@+id/Edit_ET_상품가격변경"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:hint="상품가격변경"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Edit_ET_상품명변경" />
+
+    <Button
+        android:id="@+id/Edit_BT_확인"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="확인"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Edit_ET_상품가격변경" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

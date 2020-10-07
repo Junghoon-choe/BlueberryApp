@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Payment_Page">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageSwitcher
+            android:id="@+id/결재창광고창"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#00ff"
+            android:gravity="center"
+            android:src="@drawable/adver"
+            app:layout_constraintBottom_toTopOf="@id/TV_로그인"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/TV_로그인"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="#00ff0000"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="로그인"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/TV_회원가입"
+            app:layout_constraintTop_toBottomOf="@id/결재창광고창" />
+
+        <TextView
+            android:id="@+id/TV_회원가입"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="#00ff0000"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="회원가입"
+            app:layout_constraintLeft_toRightOf="@id/TV_로그인"
+            app:layout_constraintRight_toLeftOf="@id/TV_장바구니"
+            app:layout_constraintTop_toBottomOf="@id/결재창광고창" />
+
+        <TextView
+            android:id="@+id/TV_장바구니"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="#00ff0000"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="장바구니"
+            app:layout_constraintLeft_toRightOf="@id/TV_회원가입"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/결재창광고창" />
+
+        <ImageView
+            android:id="@+id/사진배경"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:background="#3f11"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/결재창광고창" />
+
+        <ImageView
+            android:id="@+id/IV_사진"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="50dp"
+            android:clickable="true"
+            android:src="@drawable/blueberryicon"
+            app:layout_constraintBottom_toBottomOf="@id/사진배경"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintLeft_toLeftOf="@id/사진배경"
+            app:layout_constraintRight_toRightOf="@id/사진배경"
+            app:layout_constraintTop_toTopOf="@id/사진배경"
+            app:layout_constraintVertical_bias="1.0" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/BT_이용후기"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="#00ff0000"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="상품리뷰"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/BT_매거진"
+            app:layout_constraintTop_toBottomOf="@id/사진배경" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/BT_매거진"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="#00ff0000"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="매거진"
+            app:layout_constraintLeft_toRightOf="@id/BT_이용후기"
+            app:layout_constraintRight_toLeftOf="@id/BT_질문답변"
+            app:layout_constraintTop_toBottomOf="@id/사진배경" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/BT_질문답변"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="#00ff0000"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="Q &amp; A"
+            app:layout_constraintLeft_toRightOf="@id/BT_매거진"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/사진배경" />
+
+        <TextView
+            android:id="@+id/결제창글자"
+            android:layout_width="60dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:text="결제창"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/BT_매거진" />
+
+        <ImageView
+            android:id="@+id/선"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colordarkgray"
+            app:layout_constraintTop_toBottomOf="@id/결제창글자" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/가로선"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/선">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/카드"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+
+                app:cardBackgroundColor="#ffffffff"
+                app:cardCornerRadius="50dp"
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toTopOf="@+id/BT_장바구니추가"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="312dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/food_item_image"
+                        android:layout_width="175dp"
+                        android:layout_height="173dp"
+                        android:layout_marginTop="10sp"
+                        android:padding="5dp"
+                        android:src="@mipmap/ic_launcher"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/food_item_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:textColor="@color/colorblue"
+                        android:fontFamily="cursive"
+                        android:textStyle="bold"
+                        android:text="과일명"
+                        android:textSize="18sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/food_item_image" />
+
+
+                    <TextView
+                        android:id="@+id/food_item_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
+                        android:fontFamily="sans-serif-black"
+                        android:text="$10"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="15sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/food_item_name"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/BT_장바구니추가"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:text="장바구니추가"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/BT_바로구매"
+            app:layout_constraintTop_toBottomOf="@+id/카드"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <Button
+            android:id="@+id/BT_바로구매"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:text="바로구매"
+            app:layout_constraintLeft_toRightOf="@+id/BT_장바구니추가"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/카드"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ImageView
+            android:id="@+id/가로선"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="400dp"
+            android:background="@color/colordarkgray"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/선" />
+
+
+        <ImageView
+            android:id="@+id/세로선"
+            android:layout_width="1dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colordarkgray"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/가로선" />
+
+
+        <TextView
+            android:id="@+id/고객센터"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="고객센터"
+            android:textStyle="bold"
+            app:layout_constraintHorizontal_bias="0.126"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/세로선"
+            app:layout_constraintTop_toBottomOf="@id/가로선" />
+
+        <ImageView
+            android:id="@+id/IV_전화기"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="84dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:src="@drawable/phone"
+            app:layout_constraintEnd_toStartOf="@+id/세로선"
+            app:layout_constraintLeft_toRightOf="@id/고객센터"
+            app:layout_constraintTop_toBottomOf="@id/가로선" />
+
+        <TextView
+            android:id="@+id/고객센터내용"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="010-8885-3426"
+            android:textColor="#ff2343"
+            android:textSize="12dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/고객센터" />
+
+        <TextView
+            android:id="@+id/고객센터안내"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="0dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="평일 : 09:00 ~ 18:00"
+            android:textSize="12dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/고객센터내용" />
+
+        <TextView
+            android:id="@+id/고객센터안내3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="점심 시간 : 12:00 ~ 13:00"
+            android:textSize="12dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/고객센터내용" />
+
+        <TextView
+            android:id="@+id/입금계좌정보"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="입금계좌정보"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/세로선"
+            app:layout_constraintTop_toBottomOf="@id/가로선" />
+
+        <TextView
+            android:id="@+id/계좌번호"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="베리굿팜법인"
+            android:textSize="12dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/입금계좌정보"
+            app:layout_constraintTop_toBottomOf="@+id/입금계좌정보" />
+
+        <TextView
+            android:id="@+id/계좌번호2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="신한 : 110-390-174598"
+            android:textSize="12dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/입금계좌정보"
+            app:layout_constraintTop_toBottomOf="@+id/입금계좌정보" />
+
+        <ImageView
+            android:id="@+id/가로선2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colordarkgray"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/세로선" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.blueberryapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".A_qna_writing_page"></activity>
+        <activity android:name=".A_review_writing_page" />
+        <activity android:name=".WebView" />
+        <activity android:name=".Payment_Page" />
+        <activity android:name=".B_ItemClick" />
+        <activity android:name=".A_add_review" />
+        <activity android:name=".B_edit_item" />
+        <activity android:name=".B_AddItem" />
+        <activity android:name=".B_ItemView" />
+        <activity android:name=".B_Manager_Page" />
+        <activity android:name=".Splash" />
+        <activity android:name=".A_EditPassword" />
+        <activity android:name=".A_UserInfo" />
+        <activity android:name=".Edit_box" />
+        <activity android:name=".A_QnAClick" />
+        <activity android:name=".A_ReviewClick" />
+        <activity android:name=".A_membership_withdrawal" />
+        <activity android:name=".A_order_details" />
+        <activity android:name=".A_Member_information_page" />
+        <activity android:name=".A_basket_page" />
+        <activity android:name=".A_qna_page" />
+        <activity android:name=".A_magazine_page" />
+        <activity android:name=".A_review_page" />
+        <activity android:name=".A_notice_page" />
+        <activity android:name=".forgot_page" />
+        <activity android:name=".signup_page3" />
+        <activity android:name=".signup_page2" />
+        <activity android:name=".signup_page1" />
+        <activity android:name=".review_page" />
+        <activity android:name=".qna_page" />
+        <activity android:name=".A_payment_page" />
+        <activity android:name=".notice_page" />
+        <activity android:name=".A_my_page" />
+        <activity android:name=".magazine_page" />
+        <activity android:name=".basket_page" />
+        <activity android:name=".A_main_page" />
+        <activity android:name=".Login_Page" />
+        <activity
+            android:name=".SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.시작화면"> <!-- 화면 가로 고정. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".main_page" />
+    </application>
+
+</manifest>

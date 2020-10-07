@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1030258059783",
+    "firebase_url": "https://berrygoodapp.firebaseio.com",
+    "project_id": "berrygoodapp",
+    "storage_bucket": "berrygoodapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030258059783:android:79b752d544e7f4f7cb18a2",
+        "android_client_info": {
+          "package_name": "com.example.blueberryapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1030258059783-2utjq5bfs12qip6hsu1aj9hggjngv7vm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5G90rkHVCT9FmA4lK5YjBnCV5tCl-LaU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030258059783-2utjq5bfs12qip6hsu1aj9hggjngv7vm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
