@@ -50,9 +50,6 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
         RE_FoodAdapter.ViewHolder viewHolder = new RE_FoodAdapter.ViewHolder(view);
 
         return new ViewHolder(view);
-
-//        return viewHolder;
-
     }
 
     @Override
@@ -85,7 +82,6 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
         return (null != FoodList ? FoodList.size() : 0);
     }
 
-
     public RE_Food getItem(int position) {
         return FoodList.get(position);
     }
@@ -105,13 +101,13 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
 
     @Override
     public void onItemClick(View view, int position) {
-        if (foodlistener != null) {
-            foodlistener.onItemClick(view, position);
+        if (foodListener != null) {
+            foodListener.onItemClick(view, position);
         }
     }
 
     public void setOnItemClickListener(OnFoodItemClickListener listener) {
-        this.foodlistener = listener;
+        this.foodListener = listener;
 
     }
 
@@ -192,7 +188,7 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
 
 
     //아이템 클릭 리스너 구현
-    static public OnFoodItemClickListener foodlistener;
+    static public OnFoodItemClickListener foodListener;
 
     public interface OnItemClickListener {
         void onItemClick(int position);

@@ -272,11 +272,7 @@ public class main_page extends AppCompatActivity implements RE_FoodAdapter.OnIte
     }
 
 
-    private String getFileExtension(Uri uri) {
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
+
 
 
     //TODO : Store에서 가져올수 있게 변경하기. 참조 가능하게 만들기.
@@ -332,7 +328,8 @@ public class main_page extends AppCompatActivity implements RE_FoodAdapter.OnIte
         }
 
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-            finish();
+            System.exit(0);
+
             toast.cancel();
         }
     }
@@ -383,6 +380,7 @@ public class main_page extends AppCompatActivity implements RE_FoodAdapter.OnIte
         String FoodName =FoodList.get(position).FoodName;
         String FoodPrice = FoodList.get(position).FoodPrice;
         String FoodImage = FoodList.get(position).FoodImageUrl;
+
 
         Log.d("Image",FoodImage);
 

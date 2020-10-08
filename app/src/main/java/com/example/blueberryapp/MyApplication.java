@@ -11,6 +11,11 @@ public class MyApplication extends Application {
     public static String 회원Email;
     public static String 회원PhoneNum;
     public static String 회원Address;
+
+
+    public static String 결제금액;
+
+
     // 회원 장바구니도 포함시킬것.
 
     // 로그인을 담당하는 Activity에서 이 변수에 값을 저장해준다.

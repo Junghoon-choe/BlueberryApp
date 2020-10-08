@@ -1,6 +1,8 @@
 package com.example.blueberryapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,14 +16,27 @@ import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 public class A_payment_page extends AppCompatActivity {
 
 
+    public static final String TAG = "ItemAdder";
     private Button BT_이용후기, BT_매거진, BT_질문답변, BT_장바구니추가, BT_바로구매;
     private TextView TV_로그아웃, TV_마이페이지, TV_장바구니, food_item_name, food_item_price;
     private ImageView IV_사진, IV_전화기;
@@ -30,6 +45,16 @@ public class A_payment_page extends AppCompatActivity {
     private boolean aBoolean;
     private Thread thread;
     private ImageSwitcher imageSwitcher;
+
+    ArrayList<UserInfo> UserList;
+
+//    private FirebaseDatabase database;
+//    private DatabaseReference reference;
+//    private StorageReference storageRef;
+
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private CollectionReference UsersCRef = firestore.collection("Users");
+    private CollectionReference BasketCRef = UsersCRef.document().collection("Basket");
 
 
     @Override
@@ -110,13 +135,13 @@ public class A_payment_page extends AppCompatActivity {
         thread.start();
 
 
-
         Intent intent = getIntent();
 
 
-        String FoodName = intent.getExtras().getString("FoodName");
-        String FoodPrice = intent.getExtras().getString("FoodPrice");
-        String FoodImage = intent.getExtras().getString("FoodImage");
+        final String FoodName = intent.getExtras().getString("FoodName");
+        final String FoodPrice = intent.getExtras().getString("FoodPrice");
+        final String FoodImage = intent.getExtras().getString("FoodImage");
+        final String FoodAmount = intent.getExtras().getString("FoodAmount");
 
 
 
@@ -124,21 +149,18 @@ public class A_payment_page extends AppCompatActivity {
         TextView food_item_price = findViewById(R.id.food_item_price);
         ImageView food_item_image = findViewById(R.id.food_item_image);
 
-        String str1 = FoodName;
-        String str2 = FoodPrice;
 
-        food_item_name.setText(str1);
-        food_item_price.setText(str2);
+        food_item_name.setText(FoodName);
+        food_item_price.setText(FoodPrice);
         Picasso.with(this).load(FoodImage).into(food_item_image);
 
 
-
         BT_장바구니추가.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(A_payment_page.this, A_basket_page.class);
-                startActivity(intent);
-                finish();
+                addItemToBasket(FoodName, FoodPrice, FoodImage, FoodAmount);
             }
         });
 
@@ -187,6 +209,7 @@ public class A_payment_page extends AppCompatActivity {
                 finish();
             }
         });
+
         BT_질문답변.setClickable(true);
         BT_질문답변.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,24 +242,41 @@ public class A_payment_page extends AppCompatActivity {
 
         TV_장바구니.setClickable(true);
         TV_장바구니.setOnClickListener(new View.OnClickListener() {
-
-
-            Intent intent = getIntent();
-
-            String FoodName = intent.getExtras().getString("FoodName");
-            String FoodPrice = intent.getExtras().getString("FoodPrice");
-            String FoodImage = intent.getExtras().getString("FoodImage");
-
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(A_payment_page.this, A_basket_page.class);
-
-                intent.putExtra("FoodName", FoodName);
-                intent.putExtra("FoodPrice", FoodPrice);
-                intent.putExtra("FoodImage", FoodImage);
-
                 startActivity(intent);
                 finish();
+            }
+        });
+    }
+
+    private void addItemToBasket(final String foodName, final String foodPrice, final String foodImage, final String foodAmount) {
+        RE_Food re_food = new RE_Food(foodName, foodPrice, foodImage, foodAmount);
+
+        UsersCRef.document(MyApplication.회원Email).collection("Basket").document(foodName).set(re_food)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        Intent intent = new Intent(A_payment_page.this, A_basket_page.class);
+
+                        intent.putExtra("FoodName", foodName);
+                        intent.putExtra("FoodPrice", foodPrice);
+                        intent.putExtra("FoodImage", foodImage);
+
+                        startActivity(intent);
+
+                        Log.d(TAG, "Document has been saved!");
+                        Toast.makeText(A_payment_page.this, "User saved!", Toast.LENGTH_SHORT).show();
+                        finish();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Document was not saved!", e);
+                Toast.makeText(A_payment_page.this, "Error!", Toast.LENGTH_SHORT).show();
             }
         });
     }

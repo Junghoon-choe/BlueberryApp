@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -22,10 +22,12 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/image_qna"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:id="@+id/basketItemImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginStart="10sp"
+
                 android:padding="5dp"
                 android:src="@mipmap/ic_launcher"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -33,44 +35,113 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/qna_number"
-                app:layout_constraintHorizontal_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintRight_toRightOf="@id/abc"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                android:padding="5dp"
-                android:textAlignment="center"
-                android:text="123"
-                android:textStyle="bold"/>
+
 
             <LinearLayout
                 android:id="@+id/abc"
-                android:layout_width="300dp"
+                android:layout_width="280dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                app:layout_constraintLeft_toRightOf="@+id/image_qna"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/basketItemImage"
                 app:layout_constraintRight_toRightOf="parent"
-                >
+                app:layout_constraintTop_toTopOf="parent">
+
+                <Button
+                    android:id="@+id/BT_deleteItem"
+                    android:text="X"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right"
+                    android:background="@drawable/btn_blue"
+                    />
 
                 <TextView
-                    android:id="@+id/qna_textView"
+                    android:id="@+id/basketItemTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="제목"
-                    android:textSize="30dp" />
+                    android:fontFamily="cursive"
+                    android:layout_marginTop="10dp"
+                    android:text="과일명"
+                    android:textColor="@color/colorblue"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/qna_textView2"
+                <LinearLayout
+                    android:id="@+id/가격레이아웃"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="글"
-                    android:textColor="#ff0000ff"
-                    android:textSize="20sp"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+
+                        android:text="￦"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/basketItemPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="cursive"
+                        android:text="가격"
+                        android:textColor="@color/colorblue"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="수량 : "
+                        android:textSize="15sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/basketItemAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="5dp"
+                        android:text="1"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <Button
+                        android:id="@+id/BT_countUp"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="20dp"
+                        android:background="@drawable/btn_blue"
+                        android:text="+"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/BT_countDown"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/btn_blue"
+                        android:layout_marginStart="10dp"
+                        android:text="-"
+                        android:textSize="20sp"
+                        />
+
+
+                </LinearLayout>
+
+
 
 
             </LinearLayout>

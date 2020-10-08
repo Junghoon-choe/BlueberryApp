@@ -196,6 +196,8 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
         getDataFromFireStore();
 
 
+
+
         IV_전화기.setClickable(true);
         IV_전화기.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -297,6 +299,7 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
                     String foodName = re_food.getFoodName();
                     String foodPrice = re_food.getFoodPrice();
                     String foodImage = re_food.getImageUrl();
+                    String foodAmount = re_food.getFoodAmount();
 
                     FoodList.add(re_food);
                 }
@@ -362,6 +365,7 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
             return;
         }
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            startActivity(new Intent(A_main_page.this, main_page.class));
             finish();
             toast.cancel();
         }
@@ -378,6 +382,7 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
         String FoodName = FoodList.get(position).FoodName;
         String FoodPrice = FoodList.get(position).FoodPrice;
         String FoodImage = FoodList.get(position).FoodImageUrl;
+        String FoodAmount = FoodList.get(position).FoodAmount;
 
         Log.d("Image", FoodImage);
 
@@ -385,6 +390,7 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
         intent.putExtra("FoodName", FoodName);
         intent.putExtra("FoodPrice", FoodPrice);
         intent.putExtra("FoodImage", FoodImage);
+        intent.putExtra("FoodAmount",FoodAmount);
         startActivity(intent);
 
     }

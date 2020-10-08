@@ -114,6 +114,7 @@ public class signup_page2 extends AppCompatActivity {
         setContentView(R.layout.activity_signup_page2);
 
         auth = FirebaseAuth.getInstance();
+        ///
 
 
 //        loadUserData();

@@ -1,24 +1,34 @@
 package com.example.blueberryapp;
 
-public class RE_Food {
+import android.widget.EditText;
 
+public class RE_Food {
 
 
     String FoodName;
     String FoodPrice; //음식 이름을 저장해두기 위한 변수
     String FoodImageUrl;
+    String FoodAmount;
 
     //Constructors
+
+
     public RE_Food() {
+
     }
 
-
-    public RE_Food(String foodName, String foodPrice, String imageUrl) {
-
-
+    public RE_Food(String foodName, String foodPrice, String foodImageUrl, String foodAmount) {
         FoodName = foodName;
         FoodPrice = foodPrice;
-        FoodImageUrl = imageUrl;
+        FoodImageUrl = foodImageUrl;
+        FoodAmount = foodAmount;
+    }
+    public String getFoodAmount(){
+        return FoodAmount;
+    }
+
+    public void setFoodAmount(String foodAmount){
+        FoodAmount = foodAmount;
     }
 
     public String getFoodName() {

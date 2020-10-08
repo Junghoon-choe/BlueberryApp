@@ -14,30 +14,39 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class A_basket_page extends AppCompatActivity {
+public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_Basket.OnItemClickListener {
 
 
-
+    public static final String GET_NAME = "get Name";
     private Handler handler = new Handler();
     private boolean aBoolean;
     private Thread thread;
     private ImageSwitcher imageSwitcher;
+
 
 
 
@@ -48,8 +57,11 @@ public class A_basket_page extends AppCompatActivity {
 
     //장바구니 구현
     private RecyclerView recyclerView;
+    private RE_FoodAdapter_Basket re_foodAdapter_basket;
 
-    ArrayList<UserInfo> UserList;
+    private ArrayList<RE_Food> FoodList;
+    private ArrayList<UserInfo> UserList;
+
 
     private FirebaseDatabase database;
     private DatabaseReference reference;
@@ -57,6 +69,15 @@ public class A_basket_page extends AppCompatActivity {
 
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private CollectionReference UsersCRef = firestore.collection("Users");
+    private CollectionReference foodBasketCRef = UsersCRef.document(MyApplication.회원Email).collection("Basket");
+    private CollectionReference extendedPrice = foodBasketCRef.document("Basket").collection("extendedPrice");
+
+
+    //장바구니 연산 구현
+//    private EditText ET_itemCounter;
+//    private Button BT_countUp, BT_countDown, BT_deleteItem;
+    private TextView TV_totalAmount;
+    private LinearLayout BT_payment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +94,32 @@ public class A_basket_page extends AppCompatActivity {
         Log.v("A_basket_onCreate",실행);
         IV_전화기 = findViewById(R.id.IV_전화기);
         imageSwitcher = findViewById(R.id.A장바구니광고창);
+        recyclerView = findViewById(R.id.RE_장바구니);
+
+        TV_totalAmount = findViewById(R.id.TV_totalCost);
+        BT_payment = findViewById(R.id.BT_payment);
 
 
+        String Cost = (MyApplication.결제금액);
+        TV_totalAmount.setText(Cost);
+        BT_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(A_basket_page.this,"결제 클릭",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // ArrayList
+        FoodList = new ArrayList<>();
+
+        //Clear ArrayList
+        ClearAll();
+
+        // Get Data Method
+        getDataFromFireStore();
+
+
+        //TODO : Intent로 받은 내용을 리사이클러뷰로 구현하기.
         //Thread
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
@@ -110,6 +155,7 @@ public class A_basket_page extends AppCompatActivity {
                             @Override
                             public void run() {
                                 imageSwitcher.setImageResource(images[cur]);
+
                             }
                         });
                     }
@@ -214,7 +260,7 @@ public class A_basket_page extends AppCompatActivity {
         //장바구니 구현
         recyclerView = findViewById(R.id.RE_장바구니);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2); // 갯수
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 1); // 갯수
         recyclerView.setLayoutManager(layoutManager);
 
 //        re_foodAdapter = new RE_FoodAdapter(mContext, foodList);
@@ -231,7 +277,6 @@ public class A_basket_page extends AppCompatActivity {
 
         storageRef = FirebaseStorage.getInstance().getReference("foodImages");
 
-
         // ArrayList
         UserList = new ArrayList<>();
 
@@ -240,48 +285,52 @@ public class A_basket_page extends AppCompatActivity {
 
         // Get Data Method
         getDataFromFireStore();
+//        getPriceFromFireStore();
 
-
-        //get Intent from mainActivity
-        Intent intent = getIntent();
-
-
-
-
-        String FoodName = intent.getExtras().getString("FoodName");
-        String FoodPrice = intent.getExtras().getString("FoodPrice");
-        String FoodImage = intent.getExtras().getString("FoodImage");
-
-
-
-        TextView food_item_name = findViewById(R.id.food_item_name);
-        TextView food_item_price = findViewById(R.id.food_item_price);
-        ImageView food_item_image = findViewById(R.id.food_item_image);
-
-        String str1 = FoodName;
-        String str2 = FoodPrice;
-
-        food_item_name.setText(str1);
-        food_item_price.setText(str2);
-        Picasso.with(this).load(FoodImage).into(food_item_image);
-
+//        re_foodAdapter_basket.notifyDataSetChanged();
 
     }
+
+//    private void getPriceFromFireStore() {
+//        extendedPrice.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//
+//
+//            }
+//        });
+//    }
+
 
     private void getDataFromFireStore() {
 
+        re_foodAdapter_basket = new RE_FoodAdapter_Basket(A_basket_page.this, FoodList);
+        //connect Adapter with RecyclerView
+        recyclerView.setAdapter(re_foodAdapter_basket);
+
+        //클릭 리스너 구현
+        re_foodAdapter_basket.setOnBasketItemClickListener(A_basket_page.this);
+
+        foodBasketCRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                FoodList.clear();
+
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    RE_Food re_food = documentSnapshot.toObject(RE_Food.class);
+
+
+                    FoodList.add(re_food);
+                    re_foodAdapter_basket.notifyDataSetChanged();
+                }
+
+            }
+        });
     }
 
-//    private void ClearAll() {
-//        if (UserList != null) {
-//            UserList.clear();
-//            if (basketRecyclerAdapter!= null) {
-//                basketRecyclerAdapter.notifyDataSetChanged();
-//            }
-//        }
-//
-//        UserList = new ArrayList<>();
-//    }
+    private void ClearAll() {
+    }
+
 
 
     @Override
@@ -314,6 +363,24 @@ public class A_basket_page extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.v("A_basket_onDestroy", 실행);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+
+        startActivity(new Intent(A_basket_page.this,A_basket_page.class));
+        finish();
+    }
+
+    @Override
+    public void onWhatEverClick(int position) {
+
+    }
+
+    @Override
+    public void onDeletClick(int position) {
+
     }
 
 }

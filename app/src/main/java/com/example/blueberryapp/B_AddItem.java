@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -26,6 +27,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -66,8 +68,9 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
     static private RE_FoodAdapter mAdapter;
     Button 사진추가, 확인;
     ImageView 상품사진; //게시판 리사이클러뷰 구현한뒤에구현할 것.
-    EditText edit_title, edit_price;
+    EditText edit_title, edit_price, edit_amount;
     private Uri mImageUri;
+
     String compressor;
 
 
@@ -111,12 +114,17 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
         사진추가 = findViewById(R.id.BT_사진추가);
         edit_title = findViewById(R.id.ET_상품명입력);
         edit_price = findViewById(R.id.ET_상품가격입력);
+        edit_amount = findViewById(R.id.ET_상품수량입력);
         progressBar = findViewById(R.id.ID_progressbar);
 
         확인.setOnClickListener(this);
         상품사진.setOnClickListener(this);
 
         mStorageRef = FirebaseStorage.getInstance().getReference("FoodImages");
+
+        if (edit_amount.getText() == null) {
+            edit_amount.setText("1");
+        }
 
 
     }
@@ -223,9 +231,10 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
 
 
         final String foodName = edit_title.getText().toString().trim();
-        String foodPrice = edit_price.getText().toString().trim();
+        int foodPrice = Integer.parseInt(edit_price.getText().toString());
 
-        if (foodName.isEmpty() || foodPrice.isEmpty()) {
+
+        if (foodName.isEmpty() || foodPrice==0) {
             return;
         } else {
             if (uploadTask != null && uploadTask.isInProgress()) {
@@ -256,7 +265,7 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
                         fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                RE_Food re_food = new RE_Food(edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), uri.toString());
+                                RE_Food re_food = new RE_Food(edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), uri.toString(),edit_amount.getText().toString().trim());
                                 Toast.makeText(B_AddItem.this, "업로드 성공", Toast.LENGTH_SHORT).show();
 
 
