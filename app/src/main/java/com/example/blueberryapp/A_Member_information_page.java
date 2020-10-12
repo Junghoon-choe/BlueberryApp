@@ -151,7 +151,8 @@ public class A_Member_information_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(A_Member_information_page.this, A_main_page.class);
-                startActivity(intent);finish();
+                startActivity(intent);
+                finish();
             }
         });
 

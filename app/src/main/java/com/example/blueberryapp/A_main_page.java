@@ -38,11 +38,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnItemClickListener {
 
@@ -66,7 +69,17 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
     private FirebaseFirestore DB = FirebaseFirestore.getInstance();
     private CollectionReference StoreCRef = DB.collection("FoodStore");
 
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private CollectionReference UsersCRef = firestore.collection("Users");
+    private CollectionReference BasketCRef = UsersCRef.document().collection("Basket");
+
     RecyclerView recyclerView;
+
+
+    //카카오 로그인 정보 받아오기 구현
+    String Name, Email, PhoneNum;
+    String kakaoName, kakaoEmail, kakaoPhoneNum;
+
 
 
     /*
@@ -94,7 +107,6 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_a_main_page);
-//        loadData();
 
 
         BT_이용후기 = findViewById(R.id.BT_이용후기);
@@ -111,6 +123,8 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
 
 
         StoreCRef = FirebaseFirestore.getInstance().collection("FoodStore");
+//        UsersCRef.document(MyApplication.회원Email).collection("Basket");
+//        Log.d("회원Email : ", MyApplication.회원Email);
 
 
         //Thread
@@ -173,7 +187,7 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
 
         recyclerView = findViewById(R.id.recyclerView);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2); // 갯수
+        final GridLayoutManager layoutManager = new GridLayoutManager(this, 2); // 갯수
         recyclerView.setLayoutManager(layoutManager);
 
 //        re_foodAdapter = new RE_FoodAdapter(mContext, foodList);
@@ -196,6 +210,28 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
 
         // Get Data Method
         getDataFromFireStore();
+
+        //카카오 로그인 정보 받아서 앱에 적용하는 부분
+//        Intent intentKakaoLogin = getIntent();
+//        kakaoName = intentKakaoLogin.getStringExtra("kakaoName");
+//        kakaoEmail = intentKakaoLogin.getStringExtra("kakaoEmail");
+//        kakaoPhoneNum = intentKakaoLogin.getStringExtra("kakaoPhoneNum");
+//
+//        Intent intent = getIntent();
+//        Name = intent.getStringExtra("Name");
+//        Email = intent.getStringExtra("Email");
+//        PhoneNum = intent.getStringExtra("PhoneNum");
+//
+//
+//        if (Name != null) {
+//            MyApplication.회원Email = Email;
+//            MyApplication.회원Name = Name;
+//            MyApplication.회원PhoneNum = PhoneNum;
+//        } else {
+//            MyApplication.회원Email = kakaoEmail;
+//            MyApplication.회원Name = kakaoName;
+//            MyApplication.회원PhoneNum = kakaoPhoneNum;
+//        }
 
 
 
@@ -251,24 +287,48 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
             public void onClick(View v) {
                 //SharedPreferences에 저장된 값들을 로그아웃 버튼을 누르면 삭제하기 위해 SharedPreferences를 불러온다.*메인에서 만든 이름으로.
 
+//                Login_Page login_page = new Login_Page();
+//                login_page.Kakao_Login = false;
 
-                final Intent intent = new Intent(A_main_page.this, main_page.class);
-                startActivity(intent);
+
                 FirebaseAuth.getInstance().signOut();
 
-                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onCompleteLogout() {
-                        Intent intentLogout = new Intent(A_main_page.this, Login_Page.class);
-                        intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        Login_Page login_page = new Login_Page();
-                        login_page.Kakao_Login = false;
-                        startActivity(intentLogout);
-
-                    }
-                });
-                finish();
+//                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+//                    @Override
+//                    public void onCompleteLogout() {
+//                        Intent intentLogout = new Intent(A_main_page.this, Login_Page.class);
+//                        intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        Login_Page login_page = new Login_Page();
+//                        login_page.Kakao_Login = false;
+//                        startActivity(intentLogout);
+//
+//                    }
+//                });
                 Toast.makeText(A_main_page.this, "로그아웃", Toast.LENGTH_SHORT).show();
+                UserManagement.getInstance()
+                        .requestUnlink(new UnLinkResponseCallback() {
+                            @Override
+                            public void onSessionClosed(ErrorResult errorResult) {
+                                Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
+                                final Intent intent = new Intent(A_main_page.this, Login_Page.class);
+                                startActivity(intent);
+                                finish();
+                            }
+
+                            @Override
+                            public void onFailure(ErrorResult errorResult) {
+                                Log.e("KAKAO_API", "연결 끊기 실패: " + errorResult);
+
+                            }
+
+                            @Override
+                            public void onSuccess(Long result) {
+                                Log.i("KAKAO_API", "연결 끊기 성공. id: " + result);
+                                final Intent intent = new Intent(A_main_page.this, Login_Page.class);
+                                startActivity(intent);
+                            }
+                        });
+                finish();
             }
         });
         TV_마이페이지.setClickable(true);
@@ -405,7 +465,7 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
         intent.putExtra("FoodName", FoodName);
         intent.putExtra("FoodPrice", FoodPrice);
         intent.putExtra("FoodImage", FoodImage);
-        intent.putExtra("FoodAmount",FoodAmount);
+        intent.putExtra("FoodAmount", FoodAmount);
         startActivity(intent);
 
     }

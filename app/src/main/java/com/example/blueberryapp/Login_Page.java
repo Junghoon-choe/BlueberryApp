@@ -64,6 +64,13 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
+import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
+import com.kakao.usermgmt.response.model.Profile;
+import com.kakao.usermgmt.response.model.UserAccount;
+import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 
 import org.json.JSONException;
@@ -79,6 +86,7 @@ import static com.example.blueberryapp.R.id.ID_checkBox;
 import static com.example.blueberryapp.R.id.Login;
 import static com.example.blueberryapp.R.id.bottom;
 import static com.example.blueberryapp.R.id.checked;
+import static com.example.blueberryapp.R.id.fill;
 import static com.example.blueberryapp.R.id.start;
 import static com.example.blueberryapp.R.id.text;
 
@@ -119,12 +127,14 @@ public class Login_Page extends AppCompatActivity {
     private String UserEmail;
 
 
-
     //카카오 로그인버튼 구현
     //TODO : 1. 로그인되면 바로 회원가입 처리되어서 fireStore에 추가되고 추가된 아이디로 로그인 될수 있도록 만들기.
     //TODO : 2. 로그인된 메인창으로 이동후 로그아웃버튼을 누르면, 카카오 로그아웃 될수 있도록 만들기.
 
-    public boolean Kakao_Login = false;
+//    public boolean Kakao_Login = false;
+
+    public boolean clickedBT_Login = false;
+    public boolean clickedBT_kakaoLogin = false;
 
 
     private ISessionCallback sessionCallback = new ISessionCallback() {
@@ -132,8 +142,11 @@ public class Login_Page extends AppCompatActivity {
         public void onSessionOpened() {
 
             Log.i("KAKAO_SESSION", "로그인성공");
+
             sessionCallback.onSessionOpened();
-            Kakao_Login = true;
+
+
+//            Kakao_Login = true;
         }
 
         @Override
@@ -141,7 +154,6 @@ public class Login_Page extends AppCompatActivity {
             Log.i("KAKAO_SESSION", "로그인실패", exception);
         }
     };
-
 
 
     Session session;
@@ -187,15 +199,29 @@ public class Login_Page extends AppCompatActivity {
         //세션 콜백 등록
 
         sessionCallback = new SessionCallback();
+
         com.kakao.auth.Session.getCurrentSession().addCallback(sessionCallback);
         com.kakao.auth.Session.getCurrentSession().checkAndImplicitOpen();
 
 
-        if (Kakao_Login = true){
-            startActivity(new Intent(Login_Page.this, A_main_page.class));
-        } else if (Kakao_Login = false){
-            return;
-        }
+//        if (Kakao_Login = true){
+//            startActivity(new Intent(Login_Page.this, A_main_page.class));
+//            SessionCallback sessionCallback = new SessionCallback();
+//            String email = sessionCallback.Email;
+//            String name = sessionCallback.Name;
+//            String pw = sessionCallback.PW;
+//            String phoneNum = sessionCallback.PhoneNum;
+//
+//            MyApplication.회원Email = email;
+//            MyApplication.회원Name = name;
+//            MyApplication.회원PW = pw;
+//            MyApplication.회원PhoneNum = phoneNum;
+//            finish();
+//
+//        } else if (Kakao_Login = false){
+//            startActivity(new Intent(Login_Page.this, Login_Page.class));
+//
+//        }
 
 
         //Thread
@@ -380,10 +406,11 @@ public class Login_Page extends AppCompatActivity {
     }
 
     private void userLogin() {
-
+        clickedBT_Login = true;
         //사용자가 입력한 값을 Email, PW변수에 저장함.
         String Email = ET_Email.getText().toString().trim();
         String PW = ET_Password.getText().toString().trim();
+
 
         if (Email.equals("Manager") && PW.equals("1234")) {
             startActivity(new Intent(this, B_Manager_Page.class));
@@ -434,12 +461,24 @@ public class Login_Page extends AppCompatActivity {
                 String Name = userName;
                 String PhoneNum = userPhoneNum;
 
+
                 Log.d(TAG, "Email :" + Email);
 
-                MyApplication.회원Email = userEmail;
-                MyApplication.회원PW = userPw;
-                MyApplication.회원Name = userName;
-                MyApplication.회원PhoneNum = userPhoneNum;
+
+                if (clickedBT_Login = true) {
+                    Intent intent = new Intent(getApplicationContext(), A_main_page.class);
+//                    intent.putExtra("Name", userName);
+//                    intent.putExtra("Email", userEmail);
+//                    intent.putExtra("Pw", userPw);
+//                    intent.putExtra("PhoneNum", userPhoneNum);
+                    MyApplication.회원Email = userEmail;
+                    MyApplication.회원Name = userName;
+                    MyApplication.회원PhoneNum = userPhoneNum;
+
+                    startActivity(intent);
+                    finish();
+                }
+
 
                 Log.d(TAG, "회원Email :" + MyApplication.회원Email);
             }
@@ -451,11 +490,11 @@ public class Login_Page extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
-                    Intent intent = new Intent(getApplicationContext(), A_main_page.class);
-                    //TODO : 어떤 메서드인지 정확하게 파악할것.
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
+//                    Intent intent = new Intent(getApplicationContext(), A_main_page.class);
+//                    //TODO : 어떤 메서드인지 정확하게 파악할것.
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
                 } else {
                     Toast.makeText(getApplicationContext(), "아이디 또는 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
                 }
@@ -520,7 +559,6 @@ public class Login_Page extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.v("Login_onStop", 실행);
-
     }
 
     //카카오 로그인 구현
@@ -538,8 +576,130 @@ public class Login_Page extends AppCompatActivity {
         if (com.kakao.auth.Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
-
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    public class SessionCallback implements ISessionCallback {
+
+
+        public static final String TAG = "kakao";
+        private FirebaseFirestore DB = FirebaseFirestore.getInstance();
+
+
+        String Email = null;
+        String Name = null;
+        String PW = "X";
+        String PhoneNum = "X";
+
+        //로그인에 성공한 상태
+        @Override
+        public void onSessionOpened() {
+            requestMe();
+        }
+
+        //로그인에 실패한 상태
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            Log.e("SessionCallback :: ", "onSessionOpenFailed : " + exception.getMessage());
+        }
+
+        // 사용자 정보 요청
+        public void requestMe() {
+            UserManagement.getInstance()
+                    .me(new MeV2ResponseCallback() {
+                        @Override
+                        public void onSessionClosed(ErrorResult errorResult) {
+                            Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
+                        }
+
+                        @Override
+                        public void onFailure(ErrorResult errorResult) {
+                            Log.e("KAKAO_API", "사용자 정보 요청 실패: " + errorResult);
+                        }
+
+                        @Override
+                        public void onSuccess(MeV2Response result) {
+                            Log.i("KAKAO_API", "사용자 아이디: " + result.getId());
+
+
+                            UserAccount kakaoAccount = result.getKakaoAccount();
+                            if (kakaoAccount != null) {
+
+                                // 이메일
+                                String email = kakaoAccount.getEmail();
+
+                                if (email != null) {
+                                    Log.i("KAKAO_API", "email: " + email);
+                                    Email = email.trim();
+
+                                } else if (kakaoAccount.emailNeedsAgreement() == OptionalBoolean.TRUE) {
+                                    // 동의 요청 후 이메일 획득 가능
+                                    // 단, 선택 동의로 설정되어 있다면 서비스 이용 시나리오 상에서 반드시 필요한 경우에만 요청해야 합니다.
+
+                                } else {
+                                    // 이메일 획득 불가
+                                }
+
+                                // 프로필
+                                Profile profile = kakaoAccount.getProfile();
+
+                                if (profile != null) {
+                                    Log.d("KAKAO_API", "nickname: " + profile.getNickname());
+                                    Log.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
+                                    Log.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
+
+                                    Name = profile.getNickname().trim();
+
+
+                                    Intent intent = new Intent(getApplicationContext(), A_main_page.class);
+//                                    intent.putExtra("kakaoName", Name);
+//                                    intent.putExtra("kakaoEmail", Email);
+//                                    intent.putExtra("kakaoPhoneNum", "X");
+
+                                    MyApplication.회원Email = Email;
+                                    MyApplication.회원Name = Name;
+                                    MyApplication.회원PhoneNum = PhoneNum;
+
+                                    Log.d("PUT kakaoEmail : ",Email);
+                                    UsersCRef.document(Email).collection("Basket");
+
+                                    startActivity(intent);
+                                    finish();
+
+
+                                } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
+                                    // 동의 요청 후 프로필 정보 획득 가능
+
+                                } else {
+                                    // 프로필 획득 불가
+                                }
+                            }
+
+
+                        }
+                    });
+        }
+
+        private void addUser(String email, String pw, String name, String phoneNum) {
+
+            UserHelper userHelper = new UserHelper(email, pw, name, phoneNum);
+
+            UsersCRef.document(email).set(userHelper)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "Document has been saved!");
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "Document was not saved!", e);
+                }
+            });
+        }
+
     }
 }
 
