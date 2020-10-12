@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BlueBerryApp</string>
     <string name="title_activity_after__signup">After_Signup</string>
+    <string name="kakao_app_key">cdfb8a5b99ec01ee2101c1af5f47f2f6</string>
 
     <string name="large_text">
         "Material is the metaphor.\n\n"

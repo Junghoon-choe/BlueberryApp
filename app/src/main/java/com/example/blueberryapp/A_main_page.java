@@ -38,6 +38,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -249,11 +251,24 @@ public class A_main_page extends AppCompatActivity implements RE_FoodAdapter.OnI
             public void onClick(View v) {
                 //SharedPreferences에 저장된 값들을 로그아웃 버튼을 누르면 삭제하기 위해 SharedPreferences를 불러온다.*메인에서 만든 이름으로.
 
-                Intent intent = new Intent(A_main_page.this, main_page.class);
+
+                final Intent intent = new Intent(A_main_page.this, main_page.class);
                 startActivity(intent);
                 FirebaseAuth.getInstance().signOut();
-                Toast.makeText(A_main_page.this, "로그아웃", Toast.LENGTH_SHORT).show();
+
+                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onCompleteLogout() {
+                        Intent intentLogout = new Intent(A_main_page.this, Login_Page.class);
+                        intentLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Login_Page login_page = new Login_Page();
+                        login_page.Kakao_Login = false;
+                        startActivity(intentLogout);
+
+                    }
+                });
                 finish();
+                Toast.makeText(A_main_page.this, "로그아웃", Toast.LENGTH_SHORT).show();
             }
         });
         TV_마이페이지.setClickable(true);

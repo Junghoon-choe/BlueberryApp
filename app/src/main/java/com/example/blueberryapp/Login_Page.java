@@ -9,18 +9,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Color;
+import android.media.MediaSession2;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.se.omapi.Session;
+import android.service.textservice.SpellCheckerService;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethod;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -34,6 +39,7 @@ import android.widget.ViewSwitcher;
 
 import com.android.volley.Response;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -56,6 +62,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.kakao.auth.AuthType;
+import com.kakao.auth.ISessionCallback;
+import com.kakao.util.exception.KakaoException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +79,7 @@ import static com.example.blueberryapp.R.id.ID_checkBox;
 import static com.example.blueberryapp.R.id.Login;
 import static com.example.blueberryapp.R.id.bottom;
 import static com.example.blueberryapp.R.id.checked;
+import static com.example.blueberryapp.R.id.start;
 import static com.example.blueberryapp.R.id.text;
 
 public class Login_Page extends AppCompatActivity {
@@ -109,6 +119,34 @@ public class Login_Page extends AppCompatActivity {
     private String UserEmail;
 
 
+
+    //카카오 로그인버튼 구현
+    //TODO : 1. 로그인되면 바로 회원가입 처리되어서 fireStore에 추가되고 추가된 아이디로 로그인 될수 있도록 만들기.
+    //TODO : 2. 로그인된 메인창으로 이동후 로그아웃버튼을 누르면, 카카오 로그아웃 될수 있도록 만들기.
+
+    public boolean Kakao_Login = false;
+
+
+    private ISessionCallback sessionCallback = new ISessionCallback() {
+        @Override
+        public void onSessionOpened() {
+
+            Log.i("KAKAO_SESSION", "로그인성공");
+            sessionCallback.onSessionOpened();
+            Kakao_Login = true;
+        }
+
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            Log.i("KAKAO_SESSION", "로그인실패", exception);
+        }
+    };
+
+
+
+    Session session;
+
+
     //kakaoLogin을 위한 해쉬 키 값.
     private void getAppKeyHash() {
         try {
@@ -144,10 +182,20 @@ public class Login_Page extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-//        UserEmail = Objects.requireNonNull(auth.getCurrentUser()).getUid();
-//        UserEmail = auth.getCurrentUser().getUid();
+//카카오 로그인 구현
+
+        //세션 콜백 등록
+
+        sessionCallback = new SessionCallback();
+        com.kakao.auth.Session.getCurrentSession().addCallback(sessionCallback);
+        com.kakao.auth.Session.getCurrentSession().checkAndImplicitOpen();
 
 
+        if (Kakao_Login = true){
+            startActivity(new Intent(Login_Page.this, A_main_page.class));
+        } else if (Kakao_Login = false){
+            return;
+        }
 
 
         //Thread
@@ -209,42 +257,6 @@ public class Login_Page extends AppCompatActivity {
         imageSwitcher.setVisibility(View.VISIBLE);
         thread = new ImageThread();
         thread.start();
-
-
-        // 이전에 로그인 정보를 저장시킨 기록이 있다면
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       /* SharedPreferences sharedPreferences = getSharedPreferences(shared,0);  //string 값을 받아옴.
-        String value = sharedPreferences.getString("User_ID","");//꺼내오는 것이니까 빈값으로 만들어줌.
-        String value2 = sharedPreferences.getString("User_Password","");
-        ET_ID.setText(value);
-        ET_Password.setText(value2);// onDestroy로 파괴될때 저장된 String텍스트 값을 셋해줌. 즉, 죽기전에 저장된 데이터를 만들어지면서 써지게 만들어줌. 불러오는 구문임.
-*/
-
-
-        /*ID_checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-
-                } else {
-
-                }
-            }
-        });*/
 
 
         IV_사진 = findViewById(R.id.IV_사진);
@@ -353,206 +365,6 @@ public class Login_Page extends AppCompatActivity {
             public void onClick(View v) {
 
                 userLogin();
-
-//                String textEmail = ET_Email.getText().toString();
-//                String textPassword = ET_Password.getText().toString();
-//
-//                loginUser(textEmail,textPassword);
-
-//                    isUser();
-
-//                Intent intentManager = new Intent(Login_Page.this, B_Manager_Page.class);
-//                Intent intent = new Intent(Login_Page.this, A_main_page.class);
-//
-////                SharedPreferences pref = getSharedPreferences("회원정보", MODE_PRIVATE);
-////                String 입력아이디 = ET_ID.getText().toString(); //입력칸에서 가져온 데이터를 ID에 넣고, ID,Password를 오브젝트 칸에 넘기고, 나머지 이름,이메일,폰넘버,주소를
-////                String 입력비밀번호 = ET_Password.getText().toString();
-////                String 오류; // defValue에 넣을 입력값 넣기.
-////
-////                String 입력정보 = pref.getString(입력아이디, "");
-////
-////                /*String 회원아이디 = pref.getString(회원정보.substring(0,10),""); // 불러오고 substring을 써야 수정됨.*/
-////                String 회원ID = null; // 불러오고
-////                String 회원PW = null;
-////                String 회원Name = null;
-////                String 회원Email = null;
-////                String 회원PhoneNum = null;
-////                String 회원Address = null;
-////
-////                JSONObject jsonObject;
-////
-////                try {
-////                    jsonObject = new JSONObject(입력정보);
-////
-////                    회원ID = jsonObject.getString("회원아이디");
-////                    회원PW = jsonObject.getString("회원비밀번호");
-////                    회원Name = jsonObject.getString("회원이름");
-////                    회원Email = jsonObject.getString("회원이메일");
-////                    회원PhoneNum = jsonObject.getString("회원번호");
-////                    회원Address = jsonObject.getString("회원주소");
-////
-////
-////                } catch (JSONException e) {
-////                    e.printStackTrace();
-////                } //회원정보 안에 있는 키값의 정보를 불러와줌.
-//
-//                String 입력아이디 = ET_ID.getText().toString();
-//                String 입력비밀번호 = ET_Password.getText().toString();
-//
-//                String ID = ET_ID.getText().toString();
-//                String PW = ET_Password.getText().toString();
-//
-//                isUser();
-//
-//                Log.v("실행3", 입력아이디); //112
-//                Log.v("실행4", 입력비밀번호); //112
-//
-//
-//                databaseReference.child(ID).setValue(userHelper);
-//
-//
-//
-//                if (입력아이디.equals(회원ID) && 입력비밀번호.equals(회원PW)) {
-//
-//                    Toast.makeText(Login_Page.this, ET_ID.getText().toString() + "님 환영합니다.", Toast.LENGTH_SHORT).show();
-//
-//                    MyApplication.회원ID = 회원ID;
-//                    MyApplication.회원PW = 회원PW;
-//                    MyApplication.회원Name = 회원Name;
-//                    MyApplication.회원Email = 회원Email;
-//                    MyApplication.회원PhoneNum = 회원PhoneNum;
-//                    MyApplication.회원Address = 회원Address;
-//                    startActivity(intent);
-//                    finish();
-//                } else if (입력아이디.equals("manager") && 입력비밀번호.equals("1234")) {
-//                    Toast.makeText(Login_Page.this, "관리자님 환영합니다.", Toast.LENGTH_SHORT).show();
-//                    startActivity(intentManager);
-//                    finish();
-//                } else {
-//                    Toast.makeText(getApplicationContext(), "아이디 또는 비밀번호가 잘못되었습니다.", Toast.LENGTH_SHORT).show();
-//                    return;
-//
-//                }
-
-                /*//Key에 해당한 value를 불러온다. 두번째 매개변수는, key에 해당하는 value값이 없을 때에는 이 값으로 대체한다.
-                String ID = pref.getString("회원아이디","");
-                String PW = pref.getString("회원비밀번호","");*/
-
-
-                // 이곳에 다양한 키값 가져오는법 변수로 가져오면됨
-
-
-                //===========================
-
-                /*String 회원정보PW = 입력비밀번호;*/
-                //1. 파일안에 있는지 확인해야함.
-                //===========================
-                //Gson으로 바꿔보기.
-
-
-
-
-                /*JsonParser jsonParser = new JsonParser();
-                JsonElement jsonElement = jsonParser.parse();
-                jsonElement.
-                String ID = jsonElement*/
-
-
-                //defValue는 입력된아이디가 없을때 돌려주는 인터페이스이다.
-                // 위에 넣을 String 변수를 만들어서 넣을것. Toast활용해서 문구 띄워주기.
-
-
-
-
-
-
-
-
-
-
-
-
-
-               /* JsonParser jsonParser = new JsonParser();
-                JsonElement jsonElement = jsonParser.parse(입력정보);
-                jsonElement.getAsJsonObject().get("회원아이디");*/
-
-
-
-
-
-               /* jsonElement.
-//                String ID = jsonElement
-
-
-                //나눠서 해야 좋다. 알아보기도 쉽다. 에러찾는데 무서워 하지 말아라.
-
-                Log.v("실행1",회원아이디); //{"회원번호":"1","회원비밀번호":"1","회원아이디":"wjdgns","회원이름":"1","회원이메일":"1","회원주소":"1"}
-                //>> 다른걸 다 잘라내고 회원아이디만 뽑아낼수 있어야함.
-
-                Log.v("실행2",회원비밀번호); //{"회원번호":"1","회원비밀번호":"1","회원아이디":"wjdgns","회원이름":"1","회원이메일":"1","회원주소":"1"}
-                //>> 다른걸 다 잘라내고 회원비밀번호만 뽑아낼수 있어야한다.*/
-
-                //기찬파트장님 : 지슨으로 가져오기면 하면 섭 스트링 안써도된다.
-
-
-                //리스펀스 리스너
-
-
-
-
-
-
-
-
-               /* final SharedPreferences signupSf = getSharedPreferences("signupFile",MODE_PRIVATE);
-                //처음에는 SharedPreferences에 아무런 정보도 없으므로 값을 저장할 키들을 생성한다.
-                // getString의 첫 번째 인자는 저장될 키, 두번째 인자는 값이다.
-                // 처음엔 값이 없으므로 키 값은 원하는 것으로 하고 값을 null로 준다.
-
-                String LoginId = signupSf.getString("ET_ID",null);
-                String LoginPwd = signupSf.getString("ET_Password",null);
-
-                //Login으로 들어왔을때 ET_ID와 ET_Password를 가져와서 null이 아니면 값을 가져와 Id가 지정이름이고, pwd가 지정번호면 자동적으로 액티비티 이동함.
-                if (ET_ID !=null && ET_Password !=null){
-                    if (ET_ID.equals("ID") && ET_Password.equals("PW")){
-                        Toast.makeText(Login_Page.this,LoginId+"님 자동 로그인 입니다.",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Login_Page.this, A_main_page.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }
-                else if(ET_ID==null&&ET_Password==null){
-                    BT_로그인박스.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (ET_ID.getText().toString().equals("ID")&&ET_Password.getText().toString().equals("PW")){
-                                SharedPreferences signpSf = getSharedPreferences("signupFile",Activity.MODE_PRIVATE);
-                                //회워가입할때 입력된아이디와 비번이 일치할 경루 에디터를 통해 아이디와 비번에 값을 저장해준다.
-                                //아이디가 wjdgns0312이고, 비번이 1234일 경우 SharedPreferences.Editor을 통해 auto의 아이디와 비번에 값을 저장해 준다.
-                                SharedPreferences.Editor autoLogin = signupSf.edit();
-                                autoLogin.putString("ET_ID",ET_ID.getText().toString());
-                                autoLogin.putString("ET_Password",ET_Password.getText().toString());
-                                autoLogin.commit();
-                                Toast.makeText(Login_Page.this,ET_ID.getText().toString()+"님 환영합니다.",Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(Login_Page.this,A_main_page.class);
-                                startActivity(intent);
-                                finish();
-
-                            }
-                        }
-                    });
-                }
-
-//--------------
-
-                String email = ET_ID.getText().toString();
-                String password = ET_Password.getText().toString(); // 사용자가 입력한 값을 가져오기.
-
-                Intent intent = new Intent(Login_Page.this, A_main_page.class);
-                intent.putExtra("email",email);
-                intent.putExtra("password",password);*/
-
             }
         });
 
@@ -573,9 +385,9 @@ public class Login_Page extends AppCompatActivity {
         String Email = ET_Email.getText().toString().trim();
         String PW = ET_Password.getText().toString().trim();
 
-        if (Email.equals("Manager")&& PW.equals("1234")) {
-            startActivity(new Intent(this , B_Manager_Page.class));
-        } else{
+        if (Email.equals("Manager") && PW.equals("1234")) {
+            startActivity(new Intent(this, B_Manager_Page.class));
+        } else {
             if (Email.isEmpty()) {
                 ET_Email.setError("Enter an email address");
                 ET_Email.requestFocus();
@@ -599,8 +411,6 @@ public class Login_Page extends AppCompatActivity {
                 return;
             }
         }
-
-
 
 
         progressBar.setVisibility(View.VISIBLE);
@@ -653,17 +463,6 @@ public class Login_Page extends AppCompatActivity {
         });
     }
 
-//    private void loginUser(String Email, String Password) {
-//        auth.signInWithEmailAndPassword(Email,Password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//            @Override
-//            public void onSuccess(AuthResult authResult) {
-//                Toast.makeText(Login_Page.this,"Login Successful",Toast.LENGTH_SHORT).show();
-//                startActivity(new Intent(Login_Page.this,A_main_page.class));
-//                finish();
-//            }
-//        });
-//    }
-
     private Boolean validateUserEmail() {
         String val = ET_Email.getText().toString();
         if (val.isEmpty()) {
@@ -698,107 +497,6 @@ public class Login_Page extends AppCompatActivity {
         }
     }
 
-//    private void isUser() {
-//        final String userEnteredUserID = ET_ID.getText().toString().trim(); //trim : 앞뒤 공백 제거 메서드.
-//        final String userEnteredUserPassword = ET_Password.getText().toString().trim();
-//
-////        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-//
-//
-//
-//        //TODO : 아래 부분 해석하기.
-//        Query checkUser = UsersCRef.("id").equalTo(userEnteredUserID);//checkUser이름 으로 문의한다. 주문 child값인 id를 찾아서 참조한다 같은지 유저가 입력한 아이디가 같은지.
-//
-//        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) { //dataSnapshot = 데이터 정보
-//
-//                if (snapshot.exists()) {
-//                    ET_ID.setError(null);
-////                    ET_ID.setEnabled(false);
-//
-//                    String passwordFromDB = snapshot.child(userEnteredUserID).child("pw").getValue(String.class);
-//
-//                    if (passwordFromDB.equals(userEnteredUserPassword)) {
-//
-//                        ET_ID.setError(null);
-////                        ET_ID.setEnabled(false);
-//
-//                        String idFromDB = snapshot.child(userEnteredUserID).child("id").getValue(String.class);
-//                        String nameFromDB = snapshot.child(userEnteredUserID).child("name").getValue(String.class);
-//                        String phoneNumFromDB = snapshot.child(userEnteredUserID).child("phoneNum").getValue(String.class);
-//                        String emailFromDB = snapshot.child(userEnteredUserID).child("email").getValue(String.class);
-//
-//                        Intent intent = new Intent(getApplicationContext(), A_main_page.class);
-//                        Intent managerPageIntent = new Intent(getApplicationContext(), B_Manager_Page.class);
-//
-////                        intent.putExtra("id",idFromDB);
-////                        intent.putExtra("name",nameFromDB);
-////                        intent.putExtra("phoneNum",phoneNumFromDB);
-////                        intent.putExtra("email",emailFromDB);
-////                        intent.putExtra("password",passwordFromDB);
-//
-//
-//
-//                        MyApplication.회원ID = idFromDB;
-//                        MyApplication.회원PW = passwordFromDB;
-//                        MyApplication.회원Name = nameFromDB;
-//                        MyApplication.회원Email = emailFromDB;
-//                        MyApplication.회원PhoneNum = phoneNumFromDB;
-//
-//                        Toast.makeText(Login_Page.this,ET_ID.getText().toString() + "님 환영합니다.", Toast.LENGTH_SHORT).show();
-//
-//                        if (idFromDB.equals("manager") && passwordFromDB.equals("1234")) {
-//
-//                            startActivity(managerPageIntent);
-//
-//                        } else {
-//                            startActivity(intent);
-//                        }
-//
-//
-//                    } else {
-//                        ET_ID.setError("아이디 또는 비밀번호가 잘못되었습니다.");
-//                        ET_Password.setError("아이디 또는 비밀번호가 잘못되었습니다.");
-//                        ET_ID.requestFocus();
-//                        ET_Password.requestFocus();
-//
-//                    }
-//                } else {
-//                    ET_ID.setError("아이디 또는 비밀번호가 잘못되었습니다.");
-//                    ET_Password.setError("아이디 또는 비밀번호가 잘못되었습니다.");
-//                    ET_ID.requestFocus();
-//                    ET_Password.requestFocus();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//    }
-
-
-    // OnSharedPreferecnesChangeListener == 쉐어드를 사용하여 값을 유지 변경사항 을 수신할게 싸용.
-
-
-//    public void loadUserData() {
-//        SharedPreferences sharedPreferences = getSharedPreferences("회원정보", MODE_PRIVATE);
-//        Gson gson = new Gson();
-//        String json = sharedPreferences.getString("PW", "");
-//        Type type = new TypeToken<ArrayList<UserInfo>>() {
-//        }.getType();
-//        UserList = gson.fromJson(json, type);
-//
-//        if (UserList == null) {
-//            UserList = new ArrayList<>();
-//        }
-//    }
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -825,34 +523,23 @@ public class Login_Page extends AppCompatActivity {
 
     }
 
+    //카카오 로그인 구현
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.v("Login_onDestroy", 실행);
-
-        /*SharedPreferences sharedPreferences = getSharedPreferences(shared,0);
-        SharedPreferences.Editor editor = sharedPreferences.edit(); //에디터랑 쉐프랑 연결.
-        String value = ET_ID.getText().toString(); // String 형태로 value에 저장하겠다.
-        editor.putString("User_ID",value); //저장하는 실제 구문 2가지 인자.
-        editor.commit(); // 저장함.
-        ID_checkBox.setChecked(true);*/
-
-
-        /*ID_checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-
-                } else {
-                }
-            }
-        });*/
-
-
+        //세션 콜백 삭제
+        com.kakao.auth.Session.getCurrentSession().removeCallback(sessionCallback);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // 카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK로 전달
+        if (com.kakao.auth.Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
 
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
-
-//--
 
