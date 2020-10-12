@@ -70,7 +70,7 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private CollectionReference UsersCRef = firestore.collection("Users");
     private CollectionReference foodBasketCRef = UsersCRef.document(MyApplication.회원Email).collection("Basket");
-    private CollectionReference extendedPrice = foodBasketCRef.document("Basket").collection("extendedPrice");
+
 
 
     //장바구니 연산 구현
@@ -100,8 +100,11 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         BT_payment = findViewById(R.id.BT_payment);
 
 
-        String Cost = (MyApplication.결제금액);
+        String Cost = String.valueOf(MyApplication.결제금액);
+
         TV_totalAmount.setText(Cost);
+
+
         BT_payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,6 +120,8 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
 
         // Get Data Method
         getDataFromFireStore();
+
+
 
 
         //TODO : Intent로 받은 내용을 리사이클러뷰로 구현하기.
@@ -263,8 +268,6 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1); // 갯수
         recyclerView.setLayoutManager(layoutManager);
 
-//        re_foodAdapter = new RE_FoodAdapter(mContext, foodList);
-//        mRecyclerView.setAdapter(re_foodAdapter);
 
         //TODO : 왜 매니저 창에는 뜨는데 Main에는 데이터값이 안뜨는 지 이유를 알아보고 정리하기.  (메인과 로드했을때의 메인에 해당 값 띄우기. + 게시판 만들기.)
 
@@ -279,27 +282,9 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
 
         // ArrayList
         UserList = new ArrayList<>();
-
-        //Clear ArrayList
-//        ClearAll();
-
-        // Get Data Method
         getDataFromFireStore();
-//        getPriceFromFireStore();
-
-//        re_foodAdapter_basket.notifyDataSetChanged();
 
     }
-
-//    private void getPriceFromFireStore() {
-//        extendedPrice.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//
-//
-//            }
-//        });
-//    }
 
 
     private void getDataFromFireStore() {
@@ -316,6 +301,7 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 FoodList.clear();
 
+
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     RE_Food re_food = documentSnapshot.toObject(RE_Food.class);
 
@@ -330,8 +316,6 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
 
     private void ClearAll() {
     }
-
-
 
     @Override
     protected void onStart() {
@@ -367,20 +351,7 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
 
     @Override
     public void onItemClick(int position) {
-
-
         startActivity(new Intent(A_basket_page.this,A_basket_page.class));
         finish();
     }
-
-    @Override
-    public void onWhatEverClick(int position) {
-
-    }
-
-    @Override
-    public void onDeletClick(int position) {
-
-    }
-
 }
