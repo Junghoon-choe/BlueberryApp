@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.blueberryapp">
 
-
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -15,9 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="com.kakao.sdk.AppKey"
-            android:value="@string/kakao_app_key"/>
-        <activity android:name=".A_qna_writing_page"></activity>
+        <activity android:name=".kakaoPay"></activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
+
+        <activity android:name=".A_qna_writing_page" />
         <activity android:name=".A_review_writing_page" />
         <activity android:name=".WebView" />
         <activity android:name=".Payment_Page" />

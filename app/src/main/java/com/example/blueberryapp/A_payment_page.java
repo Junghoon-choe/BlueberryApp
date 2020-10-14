@@ -27,11 +27,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
+import com.kakao.sdk.template.model.Content;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
+
+import retrofit2.http.HTTP;
 
 public class A_payment_page extends AppCompatActivity {
 
@@ -167,9 +177,18 @@ public class A_payment_page extends AppCompatActivity {
         BT_바로구매.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //TODO : 카카오페이 결제창으로 이동.
+                startActivity(new Intent(A_payment_page.this,kakaoPay.class));
+//                HttpPostData();
             }
         });
+
+        //                POST /v1/payment/ready HTTP/1.1
+//                Host: kapi.kakao.com
+//                Authorization: KakaoAK {APP_ADMIN_KEY}
+//                Content-type: application/x-www-form-urlencoded;charset=utf-8
+
+
 
         IV_전화기.setClickable(true);
         IV_전화기.setOnClickListener(new View.OnClickListener() {
@@ -250,6 +269,57 @@ public class A_payment_page extends AppCompatActivity {
             }
         });
     }
+
+//    private void HttpPostData() {
+//        try {
+//            //--------------------------
+//            //   URL 설정하고 접속하기
+//            //--------------------------
+//            URL url = new URL("http://kapi.kakao.com/v1/payment/ready");       // URL 설정
+//            HttpURLConnection http = (HttpURLConnection) url.openConnection();   // 접속
+//            //--------------------------
+//            //   전송 모드 설정 - 기본적인 설정이다
+//            //--------------------------
+//            http.setDefaultUseCaches(false);
+//            http.setDoInput(true);                         // 서버에서 읽기 모드 지정
+//            http.setDoOutput(true);                       // 서버로 쓰기 모드 지정
+//            http.setRequestMethod("POST");         // 전송 방식은 POST
+//
+//            // 서버에게 웹에서 <Form>으로 값이 넘어온 것과 같은 방식으로 처리하라는 걸 알려준다
+//            http.setRequestProperty("content-type", "application/x-www-form-urlencoded;charset=utf-8");
+//            //--------------------------
+//            //   서버로 값 전송
+//            //--------------------------
+//            StringBuffer buffer = new StringBuffer();
+//            buffer.append("id").append("=").append(myId).append("&");                 // php 변수에 값 대입
+//            buffer.append("pword").append("=").append(myPWord).append("&");   // php 변수 앞에 '$' 붙이지 않는다
+//            buffer.append("title").append("=").append(myTitle).append("&");           // 변수 구분은 '&' 사용
+//            buffer.append("subject").append("=").append(mySubject);
+//
+//            OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(), "EUC-KR");
+//            PrintWriter writer = new PrintWriter(outStream);
+//            writer.write(buffer.toString());
+//            writer.flush();
+//            //--------------------------
+//            //   서버에서 전송받기
+//            //--------------------------
+//            InputStreamReader tmp = new InputStreamReader(http.getInputStream(), "EUC-KR");
+//            BufferedReader reader = new BufferedReader(tmp);
+//            StringBuilder builder = new StringBuilder();
+//            String str;
+//            while ((str = reader.readLine()) != null) {       // 서버에서 라인단위로 보내줄 것이므로 라인단위로 읽는다
+//                builder.append(str + "\n");                     // View에 표시하기 위해 라인 구분자 추가
+//            }
+//            myResult = builder.toString();                       // 전송결과를 전역 변수에 저장
+//            ((TextView)(findViewById(R.id.text_result))).setText(myResult);
+//            Toast.makeText(MainActivity.this, "전송 후 결과 받음", 0).show();
+//        } catch (IOException e) {
+//            //
+//        } // try
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void addItemToBasket(final String foodName, final String foodPrice, final String foodImage, final String foodAmount) {
         RE_Food re_food = new RE_Food(foodName, foodPrice, foodImage, foodAmount);
