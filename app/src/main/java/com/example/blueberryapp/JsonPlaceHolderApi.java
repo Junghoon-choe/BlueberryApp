@@ -10,6 +10,9 @@ import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
+import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -20,6 +23,11 @@ import retrofit2.http.Url;
 
 public interface JsonPlaceHolderApi {
 
+
+    //kakaoPay
+    @POST("/v1/payment/ready")
+    Call<kakaoPost> kakaoPost(@HeaderMap Map<String, String> headers,
+                         @Body Post post);
 
 // GET
 
@@ -108,11 +116,19 @@ public interface JsonPlaceHolderApi {
     // the PUT method uses the request URI to supply a modified version of the requested
     // resource which replaces the original version of the resource,
     // whereas the PATCH method supplies a set of instructions to modify the resource.
-    @PUT("posts/{id}")
-    Call<Post> putPost(@Path("id") int id, @Body Post post);
 
+    // 6.헤더 넣기
+    @Headers({"Static-Header1: 123","Static-Header2: 456"})
+    @PUT("posts/{id}")
+    Call<Post> putPost(@Header ("Dynamic-Header") String header,
+                       @Path("id") int id,
+                       @Body Post post);
+
+    // 6.헤더 맵으로 넣기. getPost의 퀘리와 createPost의 필드맵과 같다.
     @PATCH("posts/{id}")
-    Call<Post> patchPost(@Path("id") int id, @Body Post post);
+    Call<Post> patchPost(@HeaderMap Map<String, String> headers,
+                         @Path("id") int id,
+                         @Body Post post);
 
     @DELETE("posts/{id}")
     Call<Void> deletePost(@Path("id") int id);

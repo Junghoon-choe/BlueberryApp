@@ -8,13 +8,17 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Comment;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +48,20 @@ public class kakaoPay extends AppCompatActivity {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                //나만의 인터셉터 메서드추가.
+//                .addInterceptor(new Interceptor() {
+//                    @NotNull
+//                    @Override
+//                    public okhttp3.Response intercept(@NotNull Chain chain) throws IOException {
+//                        Request originalRequest = chain.request();
+//
+//                        Request newRequest = originalRequest.newBuilder()
+//                                .header("Interceptor-Header","xyz")
+//                                .build();
+//                        return chain.proceed(newRequest);
+//                    }
+//                })
+                //
                 .addInterceptor(loggingInterceptor)
                 .build();
 
@@ -52,11 +70,11 @@ public class kakaoPay extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 //아래와 같은 방식으로 v3/버전3을 넣으면 뒤에 항상 슬레쉬를 붙여줘야 한다.
                 // .baseUrl("http://jsonplaceholder.typicode.com/v3/")
-                .baseUrl("http://jsonplaceholder.typicode.com/")
+                .baseUrl("http://kapi.kakao.com/")
                 //PATCH를 사용할떄 위의 구문에서 생성했듯이 gson변수를 create파라미터 안에 넣는다.
                 // 넣으면 PATCH를 했을때 나왔던 "nesciunt quas odio"문장이 아니라 null값이 나온다.
                 //TODO: 어떤 이유로 Gson을 넣으면 이상했던 문장이 null로 바뀌는지 알아보기.
-                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
 
@@ -74,10 +92,13 @@ public class kakaoPay extends AppCompatActivity {
 //        createPost();
 
         // 지정된 URL에 값을 업데이트한다.
-        updataPost();
+//        updataPost();
 
         // 지정된 URL에 임의 값을 지운다.
 //        deletePost();
+
+        //카카오페이 Post 넣어서 가져오기.
+        kakaoPost();
 
 
 //        ---- 참고 ----
@@ -88,6 +109,56 @@ public class kakaoPay extends AppCompatActivity {
 //        NetworkTask networkTask = new NetworkTask(url, null);
 //        networkTask.execute();
 
+    }
+
+    private void kakaoPost() {
+
+        kakaoPost kakaoPost = new kakaoPost("TC0ONETIME",
+                "partner_order_id",
+                "New partner_user_id",
+                "초코파이",
+                1,
+                2200,
+                200,
+                0,
+                "https://developers.kakao.com/success",
+                "https://developers.kakao.com/fail",
+                "https://developers.kakao.com/cancel");
+
+        //6. 헤더 맵 형식으로 추가.
+        Map<String, String> kakaoHeaders = new HashMap<>();
+        kakaoHeaders.put("Authorization", "KakaoAK 2802b7d197aab96f25f00e117dd465d0");
+
+
+
+        Call<kakaoPost> call = jsonPlaceHolderApi.kakaoPost(kakaoHeaders, kakaoPost);
+
+//        call.enqueue(new Callback<Post>() {
+//            @Override
+//            public void onResponse(Call<Post> call, Response<Post> response) {
+//
+//                Post postResponse = response.body();
+//
+//                String content = "";
+//
+//                //Code를 적는 이유는 응답하는 코드를 보기 위해서이다.
+//                content += "Code: " + response.code() + "\n";
+//
+//                //101이 입력되는데 아무것도 넣어주지 않았을 경우, 임의 값으로 101을 넣어준다.
+//                content += "ID : " + postResponse.getId() + "\n";
+//                content += "User ID : " + postResponse.getUserId() + "\n";
+//                content += "Title : " + postResponse.getTitle() + "\n";
+//                content += "Text : " + postResponse.getText() + "\n";
+//
+//                tv_outPut.setText(content);
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Post> call, Throwable t) {
+//
+//            }
+//        });
     }
 
     private void deletePost() {
@@ -110,12 +181,19 @@ public class kakaoPay extends AppCompatActivity {
         Post post = new Post(12, null, "New Text");
 
         //아래 Call부분의 풋 패치 메서드만 바꿔주면 된다.
-        Call<Post> call = jsonPlaceHolderApi.putPost(5,post);
+        //6. 해더추가
+//        Call<Post> call = jsonPlaceHolderApi.putPost("abc",5,post);
+
+
+        //6. 헤더 맵 형식으로 추가.
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Map-Header1", "def");
+        headers.put("Map-Header2", "ghi");
 
         //patch를 하고 title에 null값을 넣으면 아래와 같은 임의 메세지를 받는다.
         //"nesciunt quas odio"
         //위에 Gson을 추가한다 결과 : 위의 문장 대신 null 메세지가 입력된다.
-//        Call<Post> call = jsonPlaceHolderApi.patchPost(5, post);
+        Call<Post> call = jsonPlaceHolderApi.patchPost(headers, 5, post);
 
 
         call.enqueue(new Callback<Post>() {
