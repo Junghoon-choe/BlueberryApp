@@ -136,7 +136,6 @@ public class Login_Page extends AppCompatActivity {
     public boolean clickedBT_Login = false;
     public boolean clickedBT_kakaoLogin = false;
 
-
     private ISessionCallback sessionCallback = new ISessionCallback() {
         @Override
         public void onSessionOpened() {
@@ -406,7 +405,7 @@ public class Login_Page extends AppCompatActivity {
     }
 
     private void userLogin() {
-        clickedBT_Login = true;
+
         //사용자가 입력한 값을 Email, PW변수에 저장함.
         String Email = ET_Email.getText().toString().trim();
         String PW = ET_Password.getText().toString().trim();
@@ -414,7 +413,11 @@ public class Login_Page extends AppCompatActivity {
 
         if (Email.equals("Manager") && PW.equals("1234")) {
             startActivity(new Intent(this, B_Manager_Page.class));
+            clickedBT_Login = false;
+            clickedBT_kakaoLogin = false;
+            finish();
         } else {
+            clickedBT_Login = true;
             if (Email.isEmpty()) {
                 ET_Email.setError("Enter an email address");
                 ET_Email.requestFocus();
@@ -437,52 +440,94 @@ public class Login_Page extends AppCompatActivity {
                 ET_Password.requestFocus();
                 return;
             }
+
+            progressBar.setVisibility(View.VISIBLE);
+            DocumentReference documentReference = UsersCRef.document(Email);
+            documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                    assert value != null;
+                    userEmail = value.getString("email");
+                    userPw = value.getString("pw");
+                    userName = value.getString("name");
+                    userPhoneNum = value.getString("phoneNum");
+
+                    String Email = userEmail;
+                    String Pw = userPw;
+                    String Name = userName;
+                    String PhoneNum = userPhoneNum;
+
+
+                    Log.d(TAG, "Email :" + Email);
+
+
+                    if (clickedBT_Login = true) {
+//                        if (userEmail.equals("Manager")) {
+//                            startActivity(new Intent(Login_Page.this, B_Manager_Page.class));
+//                            finish();
+//                        }
+                        Intent intent = new Intent(getApplicationContext(), A_main_page.class);
+
+                        MyApplication.회원Email = userEmail;
+                        MyApplication.회원Name = userName;
+                        MyApplication.회원PhoneNum = userPhoneNum;
+
+                        startActivity(intent);
+                        finish();
+                    }
+
+
+                    Log.d(TAG, "회원Email :" + MyApplication.회원Email);
+                }
+            });
         }
 
 
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
 
         //        DocumentReference documentReference = DB.collection("Users").document("email");
 
 
-        DocumentReference documentReference = UsersCRef.document(Email);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-
-                assert value != null;
-                userEmail = value.getString("email");
-                userPw = value.getString("pw");
-                userName = value.getString("name");
-                userPhoneNum = value.getString("phoneNum");
-
-                String Email = userEmail;
-                String Pw = userPw;
-                String Name = userName;
-                String PhoneNum = userPhoneNum;
-
-
-                Log.d(TAG, "Email :" + Email);
-
-
-                if (clickedBT_Login = true) {
-                    Intent intent = new Intent(getApplicationContext(), A_main_page.class);
-//                    intent.putExtra("Name", userName);
-//                    intent.putExtra("Email", userEmail);
-//                    intent.putExtra("Pw", userPw);
-//                    intent.putExtra("PhoneNum", userPhoneNum);
-                    MyApplication.회원Email = userEmail;
-                    MyApplication.회원Name = userName;
-                    MyApplication.회원PhoneNum = userPhoneNum;
-
-                    startActivity(intent);
-                    finish();
-                }
-
-
-                Log.d(TAG, "회원Email :" + MyApplication.회원Email);
-            }
-        });
+//        DocumentReference documentReference = UsersCRef.document(Email);
+//        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//
+//                assert value != null;
+//                userEmail = value.getString("email");
+//                userPw = value.getString("pw");
+//                userName = value.getString("name");
+//                userPhoneNum = value.getString("phoneNum");
+//
+//                String Email = userEmail;
+//                String Pw = userPw;
+//                String Name = userName;
+//                String PhoneNum = userPhoneNum;
+//
+//
+//                Log.d(TAG, "Email :" + Email);
+//
+//
+//                if (clickedBT_Login = true) {
+//                    if (userEmail.equals("Manager")) {
+//                        startActivity(new Intent(Login_Page.this, B_Manager_Page.class));
+//                        finish();
+//                    }
+//                    Intent intent = new Intent(getApplicationContext(), A_main_page.class);
+//
+//                    MyApplication.회원Email = userEmail;
+//                    MyApplication.회원Name = userName;
+//                    MyApplication.회원PhoneNum = userPhoneNum;
+//
+//                    startActivity(intent);
+//                    finish();
+//                }
+//
+//
+//                Log.d(TAG, "회원Email :" + MyApplication.회원Email);
+//            }
+//        });
 
         //auth에 로그인을 하기위해서 이메일과 패스워드를 입력 받는 메서드를 사용해서 Task를 통해 로그인 여부를 확인한다.
         auth.signInWithEmailAndPassword(Email, PW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -661,7 +706,7 @@ public class Login_Page extends AppCompatActivity {
                                     MyApplication.회원Name = Name;
                                     MyApplication.회원PhoneNum = PhoneNum;
 
-                                    Log.d("PUT kakaoEmail : ",Email);
+                                    Log.d("PUT kakaoEmail : ", Email);
                                     UsersCRef.document(Email).collection("Basket");
 
                                     startActivity(intent);

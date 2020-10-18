@@ -18,7 +18,6 @@ import java.util.Map;
 import retrofit2.http.POST;
 
 public class RequestHttpURLConnection {
-    private static final Object POST = "https://kapi.kakao.com/v1/payment/ready";
 
     public String request(String _url, ContentValues _params){
 

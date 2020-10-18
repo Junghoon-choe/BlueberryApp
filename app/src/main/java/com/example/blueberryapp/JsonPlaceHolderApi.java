@@ -1,5 +1,10 @@
 package com.example.blueberryapp;
 
+import androidx.media.AudioAttributesCompat;
+
+import com.google.type.DateTime;
+import com.kakao.auth.authorization.authcode.AuthorizationCode;
+
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +28,43 @@ import retrofit2.http.Url;
 
 public interface JsonPlaceHolderApi {
 
+    @FormUrlEncoded
+    @POST("v1/payment/ready")
+    Call<kakaoPost> kakaoPost(
+            @Field("cid") String cid,
+            @Field("partner_order_id") String partner_order_id,
+            @Field("partner_user_id") String partner_user_id,
+            @Field("item_name") String item_name,
+            @Field("quantity") Integer quantity,
+            @Field("total_amount") Integer total_amount,
+            @Field("tax_free_amount") Integer tax_free_amount,
+            @Field("approval_url") String approval_url,
+            @Field("fail_url") String fail_url,
+            @Field("cancel_url") String cancel_url
+    );
 
-    //kakaoPay
-    @POST("/v1/payment/ready")
-    Call<kakaoPost> kakaoPost(@HeaderMap Map<String, String> headers,
-                         @Body Post post);
+    @GET("v1/payment/ready")
+    Call<List<Post>> kakaoGet(
+            //int >> Integer로 변경하면 null로도 출력이 가능하다.
+            //Integer >> Integer[]로 변경해서 입력이 되는 값마다 출력 할수 있게 한다.
+            // []{} 중괄호에 넣고싶은 값을 넣는다.
+            @Query("tid") String tid,
+            @Query("next_redirect_app_url") String next_redirect_app_url,
+            @Query("next_redirect_mobile_url") String next_redirect_mobile_url,
+            @Query("next_redirect_pc_url") String next_redirect_pc_url,
+            @Query("android_app_scheme") String android_app_scheme,
+            @Query("ios_app_scheme") String ios_app_scheme,
+            @Query("created_at") String created_at
+    );
+
+
+    //  6.헤더 넣기
+    //    @Headers({"Static-Header1: 123", "Static-Header2: 456"})
+    //    @PUT("posts/{id}")
+    //    Call<Post> putPost(@Header("Dynamic-Header") String header,
+    //                       @Path("id") int id,
+    //                       @Body Post post);
+
 
 // GET
 
@@ -96,9 +133,9 @@ public interface JsonPlaceHolderApi {
     @POST("posts")
     Call<Post> createPost(
             //다양한 변수를 넣을 수 있다. ~ List 등등...
-      @Field("userId") int userId,
-      @Field("title") String title,
-      @Field("body")String text
+            @Field("userId") int userId,
+            @Field("title") String title,
+            @Field("body") String text
     );
 
 
@@ -106,7 +143,7 @@ public interface JsonPlaceHolderApi {
     //POST에서는 따로 Path구문을 만들어서 작업할 필요가 없다.
     @FormUrlEncoded
     @POST("posts")
-    Call<Post> createPost(@FieldMap Map<String,String> fields);
+    Call<Post> createPost(@FieldMap Map<String, String> fields);
 
 
     // PUT PATCH DELETE
@@ -118,9 +155,9 @@ public interface JsonPlaceHolderApi {
     // whereas the PATCH method supplies a set of instructions to modify the resource.
 
     // 6.헤더 넣기
-    @Headers({"Static-Header1: 123","Static-Header2: 456"})
+    @Headers({"Static-Header1: 123", "Static-Header2: 456"})
     @PUT("posts/{id}")
-    Call<Post> putPost(@Header ("Dynamic-Header") String header,
+    Call<Post> putPost(@Header("Dynamic-Header") String header,
                        @Path("id") int id,
                        @Body Post post);
 
@@ -132,7 +169,6 @@ public interface JsonPlaceHolderApi {
 
     @DELETE("posts/{id}")
     Call<Void> deletePost(@Path("id") int id);
-
 
 
 }

@@ -2,7 +2,6 @@ package com.example.blueberryapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,26 +21,11 @@ import android.widget.ViewSwitcher;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageReference;
-import com.kakao.sdk.template.model.Content;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.ArrayList;
-
-import retrofit2.http.HTTP;
 
 public class A_payment_page extends AppCompatActivity {
 
@@ -178,7 +162,7 @@ public class A_payment_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO : 카카오페이 결제창으로 이동.
-                startActivity(new Intent(A_payment_page.this,kakaoPay.class));
+                startActivity(new Intent(A_payment_page.this, kakaoPay.class));
 //                HttpPostData();
             }
         });

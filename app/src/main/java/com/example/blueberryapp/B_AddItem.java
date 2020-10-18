@@ -129,8 +129,6 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
 
     }
 
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -162,69 +160,6 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
         });
     }
 
-//    private void addItem(String title, String price) {
-//
-//
-//        if (title.isEmpty() || price.isEmpty()) {
-//            return;
-//        } else {
-//            if (uploadTask != null && uploadTask.isInProgress()) {
-//                Toast.makeText(B_AddItem.this, "Upload in progress", Toast.LENGTH_SHORT).show();
-//            } else {
-//                //여기에서 foodImage폴더에 넣을수 있게 던져줌. 하위항목 이름 지어줄수 있는 곳.
-//                //파일을 생성하는 fileRef를 만든다.
-//                StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
-//
-//                //하위 항목으로 이미지의 이름을 지어준다. child에서 현재 시간으로 이름을 지어준다. 뒤에부분은 .jpg로 확장자를 작명하는 곳 이다.
-//                //getDownload는 Url을 다운로드 한다는 말이다.
-//
-//                uploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//
-//                        Handler handler = new Handler();
-//                        handler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                progressBar.setProgress(0);
-//                            }
-//                        }, 500);
-//
-//                        final String ImageURI;
-//
-//                        mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                            @Override
-//                            public void onSuccess(Uri uri) {
-//                                Log.d(TAG, "Image is : " + uri.toString());
-//
-//
-//                                RE_Food re_food = new RE_Food(edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), uri.toString());
-//
-//
-//                                foodStoreCRef.document(edit_title.getText().toString().trim()).set(re_food).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void aVoid) {
-//                                        Toast.makeText(B_AddItem.this, "업로드 성공", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                });
-//
-//                                startActivity(new Intent(B_AddItem.this, B_ItemView.class));
-//                                finish();
-//
-//                            }
-//                        });
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(B_AddItem.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        }
-//    }
-
-
     private void uploadFile() {
         progressBar.setVisibility(View.VISIBLE);
 
@@ -245,7 +180,6 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
 
 
                 //하위 항목으로 이미지의 이름을 지어준다. child에서 현재 시간으로 이름을 지어준다. 뒤에부분은 .jpg로 확장자를 작명하는 곳 이다.
-                //getDownload는 Url을 다운로드 한다는 말이다.
                 final StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
 
                 uploadTask = fileRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -276,25 +210,6 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
                             }
                         });
 
-
-
-
-//                        mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                            @Override
-//                            public void onSuccess(Uri uri) {
-//                                Log.d(TAG, "Image is : " + uri.toString());
-//
-//                                RE_Food re_food = new RE_Food(edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), uri.toString());
-//                                Toast.makeText(B_AddItem.this, "업로드 성공", Toast.LENGTH_SHORT).show();
-//
-//
-//                                foodStoreCRef.document(edit_title.getText().toString().trim()).set(re_food);
-//
-//                                startActivity(new Intent(B_AddItem.this, B_ItemView.class));
-//                                finish();
-//
-//                            }
-//                        });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -312,98 +227,6 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
-    // error : StorageException has occurred.
-    //    Object does not exist at location.
-
-//    private void uploadFile() {
-//        if (mImageUri != null) {
-//            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
-//
-//            Log.d(TAG,"1"+fileReference);
-//
-//            fileReference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            progressBar.setProgress(0);
-//                        }
-//                    }, 500);
-//
-//                    mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                        @Override
-//                        public void onSuccess(Uri uri) {
-//                            RE_Food re_food = new RE_Food(edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), uri.toString());
-//
-//                            foodStoreCRef.document(edit_title.getText().toString().trim()).set(re_food);
-//                            startActivity(new Intent(B_AddItem.this, B_ItemView.class));
-//                            finish();
-//                        }
-//                    });
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(B_AddItem.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//
-//        } else {
-//            Toast.makeText(this, "파일이 선택 되지 않았습니다.", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-
-//    private void uploadFile() {
-//
-//        if (imageUri != null) {
-//            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-//                    + "." + getFileExtension(imageUri));
-//
-//            uploadTask = fileReferenece.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    RE_Food re_food = new RE_Food(edit_title.getText().toString().trim(),edit_price.getText().toString().trim(),taskSnapshot.)
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(B_AddItem.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        } else {
-//            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
-//        }
-//
-//    }
-
-//    private void addFood(String foodName, String foodPrice, String foodImage) {
-//
-//
-//        RE_Food re_food = new RE_Food(foodName, foodPrice, foodImage);
-//
-//        foodStoreCRef.document(foodName).set(re_food)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//
-//                        Log.d(TAG, "Document has been saved!");
-//                        Toast.makeText(B_AddItem.this, "User saved!", Toast.LENGTH_SHORT).show();
-//                        startActivity(new Intent(B_AddItem.this, B_ItemView.class));
-//                        finish();
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.d(TAG, "Document was not saved!", e);
-//                Toast.makeText(B_AddItem.this, "Error!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
 
     private void openFileChooser() {
         Intent intent = new Intent();
@@ -425,77 +248,12 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
 
 
         }
-
-
-
-
-
-
-    /*public void saveFoodData(){
-        SharedPreferences sharedPreferences = getSharedPreferences("상품",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        String FoodName = edit_title.getText().toString(); //입력칸에서 가져온 데이터를 ID에 넣고, ID,Password를 오브젝트 칸에 넘기고, 나머지 이름,이메일,폰넘버,주소를
-        String FoodPrice = edit_price.getText().toString();
-
-
-        RE_Food re_food  = new RE_Food(FoodName,FoodPrice);
-        mList.add(re_food);
-        Gson gson = new Gson();
-        String json = gson.toJson(re_food);
-        editor.putString(FoodName,json);
-        editor.apply();
-    }*/
-
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-
-    //    private DocumentReference documentReference = FirebaseFirestore.getInstance().collection("sampleData").document("inspiration");
-//    private DocumentReference documentReference = FirebaseFirestore.getInstance().document("sampleData/inspiration");
-    //EX) sampleData/inspiration/uesr/user_123/history/05182018 >> 수집/기록/수집/기록/수집/기록 (위와 같은 내용으로 작성할시 참고 해야함.)
-
-//    public void addFood(View view) {
-//        EditText editName = findViewById(R.id.ET_상품명입력);
-//        EditText editPrice = findViewById(R.id.ET_상품가격입력);
-//
-//        String foodNameText = editName.getText().toString().trim();
-//        String foodPriceText = editPrice.getText().toString().trim();
-//
-//        if (foodNameText.isEmpty() || foodPriceText.isEmpty()) {
-//            return;
-//        }
-//
-//
-//        RE_Food re_food = new RE_Food(foodNameText, foodPriceText, null);
-//
-//        foodStoreCRef.document(foodNameText).set(re_food)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "Document has been saved!");
-//                        Toast.makeText(B_AddItem.this, "Food saved!", Toast.LENGTH_SHORT).show();
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.d(TAG, "Document was not saved!", e);
-//                Toast.makeText(B_AddItem.this, "Error!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-////        ItemAdder itemAdder = new ItemAdder(null, foodNameText, foodPriceText);
-////        reference.child("Items").setValue(itemAdder); //참조되는 부분에 사용자가 입력하는 값을 참조이름으로 적는다. ID값으로 갖는 키값에 벨류로 유저헬퍼의 정보를 넣는다.
-//        Intent intent = new Intent(B_AddItem.this, B_ItemView.class);
-//        startActivity(intent);
-//        finish();
-//
-//    }
 
 
     @Override

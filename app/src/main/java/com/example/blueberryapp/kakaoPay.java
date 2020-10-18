@@ -2,16 +2,29 @@ package com.example.blueberryapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.toolbox.Volley;
+import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.type.DateTime;
 
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Comment;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,20 +39,47 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 public class kakaoPay extends AppCompatActivity {
 
     private TextView tv_outPut;
+    public WebView mWebView;
+    private WebSettings webSettings;
+    private long time = 0;
 
+    private String url;
     private JsonPlaceHolderApi jsonPlaceHolderApi;
+    private char aChar;
+//    private String a,b,c,d,e,f;
+//    private DateTime g;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_kakao_pay);
 
-        // 위젯에 대한 참조.
-        tv_outPut = (TextView) findViewById(R.id.tv_outPut);
+        tv_outPut = findViewById(R.id.tv_outPut);
+
+
+        //카카오페이 웹뷰
+        mWebView = findViewById(R.id.mWebView);
+        mWebView.setWebViewClient(new WebViewClient()); // 클릭시 새창 안뜨게
+        webSettings = mWebView.getSettings(); //세부 세팅 등록
+        webSettings.setJavaScriptEnabled(true); // 웹페이지 자바스클비트 허용 여부
+        webSettings.setSupportMultipleWindows(false); // 새창 띄우기 허용 여부
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(false); // 자바스크립트 새창 띄우기(멀티뷰) 허용 여부
+        webSettings.setLoadWithOverviewMode(true); // 메타태그 허용 여부
+        webSettings.setUseWideViewPort(true); // 화면 사이즈 맞추기 허용 여부
+        webSettings.setSupportZoom(false); // 화면 줌 허용 여부
+        webSettings.setBuiltInZoomControls(false); // 화면 확대 축소 허용 여부
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN); // 컨텐츠 사이즈 맞추기
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); // 브라우저 캐시 허용 여부
+        webSettings.setDomStorageEnabled(true); // 로컬저장소 허용 여부
+
+
+//        url = "https://mockup-pg-web.kakao.com/v1/" + "입력값";
+
 
         //PATH를 위한 Gson생성.
         Gson gson = new GsonBuilder().serializeNulls().create();
@@ -49,34 +89,36 @@ public class kakaoPay extends AppCompatActivity {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 //나만의 인터셉터 메서드추가.
-//                .addInterceptor(new Interceptor() {
-//                    @NotNull
-//                    @Override
-//                    public okhttp3.Response intercept(@NotNull Chain chain) throws IOException {
-//                        Request originalRequest = chain.request();
-//
-//                        Request newRequest = originalRequest.newBuilder()
-//                                .header("Interceptor-Header","xyz")
-//                                .build();
-//                        return chain.proceed(newRequest);
-//                    }
-//                })
-                //
+                .addInterceptor(new Interceptor() {
+                    @NotNull
+                    @Override
+                    public okhttp3.Response intercept(@NotNull Chain chain) throws IOException {
+                        Request originalRequest = chain.request();
+
+                        Request newRequest = originalRequest.newBuilder()
+                                .header("Authorization", "KakaoAK" + " 2802b7d197aab96f25f00e117dd465d0")
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+                })
                 .addInterceptor(loggingInterceptor)
                 .build();
+
 
         //레트로릿 라이브러리를 생성해서 URL을 지정하고. 지정된 주소에 Gson컨버터 즉 변환기를 추가로 설정한다.
         // 이후에 빌드함.
         Retrofit retrofit = new Retrofit.Builder()
                 //아래와 같은 방식으로 v3/버전3을 넣으면 뒤에 항상 슬레쉬를 붙여줘야 한다.
                 // .baseUrl("http://jsonplaceholder.typicode.com/v3/")
-                .baseUrl("http://kapi.kakao.com/")
+                .baseUrl("https://kapi.kakao.com/")
+//                .baseUrl("https://blueberryapp.com/")
                 //PATCH를 사용할떄 위의 구문에서 생성했듯이 gson변수를 create파라미터 안에 넣는다.
                 // 넣으면 PATCH를 했을때 나왔던 "nesciunt quas odio"문장이 아니라 null값이 나온다.
                 //TODO: 어떤 이유로 Gson을 넣으면 이상했던 문장이 null로 바뀌는지 알아보기.
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
                 .build();
+
 
         //주소를 참조하는 인터페이스를 선언하고, 위에 선언된 레트로 생성자에 (연동)넣어서 불러 올수 있게 지정한다.
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -100,66 +142,98 @@ public class kakaoPay extends AppCompatActivity {
         //카카오페이 Post 넣어서 가져오기.
         kakaoPost();
 
-
-//        ---- 참고 ----
-//        // URL 설정.
-//        String url = "http://kapi.kakao.com/v1/payment/ready";
-//
-//        // AsyncTask를 통해 HttpURLConnection 수행.
-//        NetworkTask networkTask = new NetworkTask(url, null);
-//        networkTask.execute();
-
     }
+
+
+
+
 
     private void kakaoPost() {
 
-        kakaoPost kakaoPost = new kakaoPost("TC0ONETIME",
+
+
+
+
+
+
+        Call<kakaoPost> call = jsonPlaceHolderApi.kakaoPost(
+                "TC0ONETIME",
                 "partner_order_id",
                 "New partner_user_id",
                 "초코파이",
                 1,
                 2200,
-                200,
                 0,
-                "https://developers.kakao.com/success",
-                "https://developers.kakao.com/fail",
-                "https://developers.kakao.com/cancel");
-
-        //6. 헤더 맵 형식으로 추가.
-        Map<String, String> kakaoHeaders = new HashMap<>();
-        kakaoHeaders.put("Authorization", "KakaoAK 2802b7d197aab96f25f00e117dd465d0");
+                "https://blueberryapp.com/success",
+                "https://blueberryapp.com/fail",
+                "https://blueberryapp.com/cancel"
+        );
 
 
+        //TODO : 여기에서 Failure이 발생하는데 원인을 알아보자.
+        //보통 Failure이 발생하는 이유는 연동이 안되서 그런것이다. 그럼 연동이 왜 안되는지 알아보자.
+        //연동이 안되는 이유를 잘 모르겠다.
+        //Callback 메서드에서 오류가 나는데 그 이유를 알아보자.
+        //Api에서 GET부분을 주석 처리 해서 돌려보자 결과 :
 
-        Call<kakaoPost> call = jsonPlaceHolderApi.kakaoPost(kakaoHeaders, kakaoPost);
 
-//        call.enqueue(new Callback<Post>() {
-//            @Override
-//            public void onResponse(Call<Post> call, Response<Post> response) {
+        call.enqueue(new Callback<kakaoPost>() {
+            @Override
+            public void onResponse(Call<kakaoPost> call, Response<kakaoPost> response) {
+                if (!response.isSuccessful()) {
+                    Log.d("Code isn't Successful :", response.code() + "\n" + call);
+                    tv_outPut.setText("Code isn't Successful : " + response.code() + "\n" + call);
+
+                    return;
+                }
+                Log.d("Code is Successful ", response.code() + "\n" + call);
+                tv_outPut.setText("Code is Successful  " + response.code() + "\n" + call);
+
+
+                Log.d("Code is Successful ", "s"+url);
+                mWebView.loadUrl(url);
+//                //인터페이스에 있는 데이터들을 포스트 바디에 넣는다.
+//                List<kakaoPost> posts = Collections.singletonList(response.body());
+////
+////                //for문으로 돌면서 포스트의 전부를 불러온다.
+//                for (kakaoPost post : posts) {
+//                    //선언될 문자들을 String으로 지정한다.
+//                    String content = "";
+//                    //Code를 적는 이유는 응답하는 코드를 보기 위해서이다.
+//                    content += "Code: " + response.code() + "\n";
+//                    content += "Tid : " + post.getCid() + "\n";
+//                    content += "Ios_app_scheme : " + post.get() + "\n";
+//                    content += "Android_app_scheme : " + post.getAndroid_app_scheme() + "\n";
+//                    content += "Ios_app_scheme : " + post.getIos_app_scheme() + "\n";
+//                    content += "Next_redirect_mobile_url : " + post.getNext_redirect_mobile_url() + "\n";
+//                    content += "Next_redirect_pc_url : " + post.getNext_redirect_pc_url() + "\n";
+//                    content += "Next_redirect_app_url : " + post.getNext_redirect_app_url() + "\n";
+//                    content += "Created_at : " + post.getCreated_at() + "\n";
 //
-//                Post postResponse = response.body();
-//
-//                String content = "";
-//
-//                //Code를 적는 이유는 응답하는 코드를 보기 위해서이다.
-//                content += "Code: " + response.code() + "\n";
-//
-//                //101이 입력되는데 아무것도 넣어주지 않았을 경우, 임의 값으로 101을 넣어준다.
-//                content += "ID : " + postResponse.getId() + "\n";
-//                content += "User ID : " + postResponse.getUserId() + "\n";
-//                content += "Title : " + postResponse.getTitle() + "\n";
-//                content += "Text : " + postResponse.getText() + "\n";
-//
-//                tv_outPut.setText(content);
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Post> call, Throwable t) {
-//
-//            }
-//        });
+//                    //append 메서드는 위에 선언된 모든 원소를 추가한다는 뜻이다.
+//                    url=content;
+//                }
+
+
+            }
+            @Override
+            public void onFailure(Call<kakaoPost> call, Throwable t) {
+                Log.d("Code is Failure", ">>" + t.getMessage());
+                tv_outPut.setText("Code is Failure :" + t.getMessage());
+            }
+        });
+
+//        Call<kakaoGet> kakaoGetCall = jsonPlaceHolderApi.kakaoGet(
+//                "",
+//                "",
+//                "",
+//                "",
+//                "",
+//                "",
+//                ""
+//        )
     }
+
 
     private void deletePost() {
         Call<Void> call = jsonPlaceHolderApi.deletePost(5);
@@ -378,36 +452,4 @@ public class kakaoPay extends AppCompatActivity {
             }
         });
     }
-
-
-    //        ---- 참고 ----
-//    public class NetworkTask extends AsyncTask<Void, Void, String> {
-//
-//        private String url;
-//        private ContentValues values;
-//
-//        public NetworkTask(String url, ContentValues values) {
-//
-//            this.url = url;
-//            this.values = values;
-//        }
-//
-//        @Override
-//        protected String doInBackground(Void... params) {
-//
-//            String result; // 요청 결과를 저장할 변수.
-//            RequestHttpURLConnection requestHttpURLConnection = new RequestHttpURLConnection();
-//            result = requestHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
-//
-//            return result;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String s) {
-//            super.onPostExecute(s);
-//
-//            //doInBackground()로 부터 리턴된 값이 onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
-//            tv_outPut.setText(s);
-//        }
-//    }
 }
