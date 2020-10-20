@@ -47,7 +47,7 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
     private Thread thread;
     private ImageSwitcher imageSwitcher;
 
-
+    private String Cost;
 
 
     private Button BT_이용후기,BT_매거진,BT_질문답변;
@@ -100,9 +100,9 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         BT_payment = findViewById(R.id.BT_payment);
 
 
-        String Cost = String.valueOf(MyApplication.결제금액);
+        Cost = String.valueOf(MyApplication.결제금액);
 
-        TV_totalAmount.setText(Cost);
+
 
 
         BT_payment.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +284,8 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         UserList = new ArrayList<>();
         getDataFromFireStore();
 
+
+
     }
 
 
@@ -300,19 +302,23 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 FoodList.clear();
+                MyApplication.결제금액="";
+                int count = 0;
 
 
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     RE_Food re_food = documentSnapshot.toObject(RE_Food.class);
 
+                    count += Integer.parseInt(re_food.getFoodPrice());
+                    MyApplication.결제금액 = String.valueOf(count);
 
                     FoodList.add(re_food);
                     re_foodAdapter_basket.notifyDataSetChanged();
                 }
-
             }
         });
     }
+
 
     private void ClearAll() {
     }
@@ -322,12 +328,14 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         super.onStart();
         Log.v("A_basket_onStart", 실행);
 
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.v("A_basket_onResume", 실행);
+        TV_totalAmount.setText(Cost);
     }
 
     @Override

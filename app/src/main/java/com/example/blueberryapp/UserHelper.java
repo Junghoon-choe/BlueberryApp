@@ -2,17 +2,15 @@ package com.example.blueberryapp;
 
 public class UserHelper {
 
-String Email, PW, Name, PhoneNum ;
+String Email,  Name, PhoneNum ;
 
     public UserHelper() {
     }
 
-    public UserHelper(String Email, String PW, String Name, String PhoneNum) {
-
-        this.PW = PW;
-        this.Name = Name;
-        this.Email = Email;
-        this.PhoneNum = PhoneNum;
+    public UserHelper(String email, String name, String phoneNum) {
+        Email = email;
+        Name = name;
+        PhoneNum = phoneNum;
     }
 
     public String getEmail() {
@@ -23,20 +21,12 @@ String Email, PW, Name, PhoneNum ;
         Email = email;
     }
 
-    public String getPW() {
-        return PW;
-    }
-
-    public void setPW(String PW) {
-        this.PW = PW;
-    }
-
     public String getName() {
         return Name;
     }
 
     public void setName(String name) {
-        this.Name = name;
+        Name = name;
     }
 
     public String getPhoneNum() {

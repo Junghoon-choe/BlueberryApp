@@ -1,5 +1,6 @@
 package com.example.blueberryapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -7,14 +8,26 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 import android.widget.ViewSwitcher;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class forgot_page extends AppCompatActivity {
 
@@ -27,6 +40,13 @@ public class forgot_page extends AppCompatActivity {
     private boolean aBoolean;
     private Thread thread;
     private ImageSwitcher imageSwitcher;
+
+    //비밀번호 수정 구현
+    EditText ET_Email;
+    Button userPass;
+
+    FirebaseAuth firebaseAuth;
+    //비밀번호 수정 구현
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +63,35 @@ public class forgot_page extends AppCompatActivity {
         Log.v("forgot_onCreate", 실행);
         IV_전화기 = findViewById(R.id.IV_전화기);
         imageSwitcher = findViewById(R.id.찾기광고창);
+
+        //비밀번호 수정 구현
+        ET_Email = findViewById(R.id.ET_Forgot_Email);
+        ET_Email.getText().toString().trim();
+
+        userPass = findViewById(R.id.BT_비밀번호찾기);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        userPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.sendPasswordResetEmail(ET_Email.getText()
+                        .toString())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(forgot_page.this,"해당 이메일로 비밀번호를 전송하였습니다.",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(forgot_page.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+            }
+        });
+        //비밀번호 수정 구현
+
 
         //Thread
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {

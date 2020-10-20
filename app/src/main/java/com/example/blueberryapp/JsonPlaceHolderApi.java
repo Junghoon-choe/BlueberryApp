@@ -31,20 +31,27 @@ public interface JsonPlaceHolderApi {
     @FormUrlEncoded
     @POST("v1/payment/ready")
     Call<kakaoPost> kakaoPost(
-            @Field("cid") String cid,
-            @Field("partner_order_id") String partner_order_id,
-            @Field("partner_user_id") String partner_user_id,
-            @Field("item_name") String item_name,
-            @Field("quantity") Integer quantity,
-            @Field("total_amount") Integer total_amount,
-            @Field("tax_free_amount") Integer tax_free_amount,
-            @Field("approval_url") String approval_url,
-            @Field("fail_url") String fail_url,
-            @Field("cancel_url") String cancel_url
+            @FieldMap Map<String, String> parameters
+//            @Field("cid") String cid,
+//            @Field("partner_order_id") String partner_order_id,
+//            @Field("partner_user_id") String partner_user_id,
+//            @Field("item_name") String item_name,
+//            @Field("quantity") Integer quantity,
+//            @Field("total_amount") Integer total_amount,
+//            @Field("tax_free_amount") Integer tax_free_amount,
+//            @Field("approval_url") String approval_url,
+//            @Field("fail_url") String fail_url,
+//            @Field("cancel_url") String cancel_url
     );
 
+    @FormUrlEncoded
     @GET("v1/payment/ready")
-    Call<List<Post>> kakaoGet(
+    Call<List<kakaoGet>> kakaoGet(
+//            @Body Map<String, String> parameters
+
+
+
+
             //int >> Integer로 변경하면 null로도 출력이 가능하다.
             //Integer >> Integer[]로 변경해서 입력이 되는 값마다 출력 할수 있게 한다.
             // []{} 중괄호에 넣고싶은 값을 넣는다.

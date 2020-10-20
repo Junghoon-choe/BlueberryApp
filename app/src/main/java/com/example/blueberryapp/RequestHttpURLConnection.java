@@ -27,34 +27,6 @@ public class RequestHttpURLConnection {
         // URL 뒤에 붙여서 보낼 파라미터.
         StringBuffer sbParams = new StringBuffer();
 
-
-
-//        curl -v -X POST 'https://kapi.kakao.com/v1/payment/ready' \
-//        -H 'Authorization: KakaoAK {APP_ADMIN_KEY}' \
-//        --data-urlencode 'cid=TC0ONETIME' \
-//        --data-urlencode 'partner_order_id=partner_order_id' \
-//        --data-urlencode 'partner_user_id=partner_user_id' \
-//        --data-urlencode 'item_name=초코파이' \
-//        --data-urlencode 'quantity=1' \
-//        --data-urlencode 'total_amount=2200' \
-//        --data-urlencode 'vat_amount=200' \
-//        --data-urlencode 'tax_free_amount=0' \
-//        --data-urlencode 'approval_url=https://developers.kakao.com/success' \
-//        --data-urlencode 'fail_url=https://developers.kakao.com/fail' \
-//        --data-urlencode 'cancel_url=https://developers.kakao.com/cancel'
-
-
-//        urlConn.setRequestProperty("cid","TC0ONETIME");
-//        urlConn.setRequestProperty("KakaoAK","2802b7d197aab96f25f00e117dd465d0");
-//        urlConn.setRequestProperty("Context_Type", "application/x-www-form-urlencoded;charset=utf-8");
-//        sbParams.append("");
-//        sbParams.append("");
-//        sbParams.append("");
-//        sbParams.append("");
-//        sbParams.append("");
-//        sbParams.append("");
-
-
         /**
          * 1. StringBuffer에 파라미터 연결
          * */
@@ -102,21 +74,10 @@ public class RequestHttpURLConnection {
             // [2-1]. urlConn 설정.
             urlConn.setRequestMethod("POST"); // URL 요청에 대한 메소드 설정 : POST.
 
-            urlConn.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
-            urlConn.setRequestProperty("KakaoAK","2802b7d197aab96f25f00e117dd465d0");
-            urlConn.setRequestProperty("Context_Type", "application/x-www-form-urlencoded;charset=utf-8");
 
-//            HTTP/1.1 200 OK
-//            Content-type: application/json;charset=UTF-8
-//            {
-//                "tid": "T1234567890123456789",
-//                    "next_redirect_app_url": "https://mockup-pg-web.kakao.com/v1/xxxxxxxxxx/aInfo",
-//                    "next_redirect_mobile_url": "https://mockup-pg-web.kakao.com/v1/xxxxxxxxxx/mInfo",
-//                    "next_redirect_pc_url": "https://mockup-pg-web.kakao.com/v1/xxxxxxxxxx/info",
-//                    "android_app_scheme": "kakaotalk://kakaopay/pg?url=https://mockup-pg-web.kakao.com/v1/xxxxxxxxxx/order",
-//                    "ios_app_scheme": "kakaotalk://kakaopay/pg?url=https://mockup-pg-web.kakao.com/v1/xxxxxxxxxx/order",
-//                    "created_at": "2016-11-15T21:18:22"
-//            }
+            urlConn.setRequestProperty("Accept-Charset", "UTF-8"); // Accept-Charset 설정.
+            urlConn.setRequestProperty("Authorization","KakaoAK"+" 2802b7d197aab96f25f00e117dd465d0");
+            urlConn.setRequestProperty("Context_Type", "application/x-www-form-urlencoded;charset=utf-8");
 
 
             // [2-2]. parameter 전달 및 데이터 읽어오기.

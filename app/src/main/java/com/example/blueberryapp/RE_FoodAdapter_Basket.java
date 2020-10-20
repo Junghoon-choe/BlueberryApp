@@ -23,18 +23,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_Basket.ViewHolder> implements OnFoodItemClickListener {
@@ -88,7 +92,7 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
         int itemPrice = Integer.parseInt(re_foodCurrent.getFoodPrice());
         int totalPrice = itemPrice;
 
-        MyApplication.결제금액 += String.valueOf(totalPrice);
+//        MyApplication.결제금액 += String.valueOf(totalPrice);
 
         //TODO : 결제금액을int 로 바꾸고 전역변수에서String 으로 다시 바꿔서 합 구하기.
         Log.d("전체1", "결제금액 : " + MyApplication.결제금액);
@@ -164,11 +168,8 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
                     String Price = String.valueOf(resultPrice);
 
 
-
-
                     MyApplication.결제금액 += resultPrice;
-                    Log.d("더하기 금액",""+resultPrice);
-
+                    Log.d("더하기 금액", "" + resultPrice);
 
 
                     RE_Food selectedItem = FoodList.get(position);
@@ -179,6 +180,7 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
                     counter.put("foodName", FoodList.get(position).FoodName);
                     counter.put("foodPrice", Price);
                     counter.put("imageUrl", FoodList.get(position).FoodImageUrl);
+
 
                     StoreCRef.document(MyApplication.회원Email).collection("Basket").document(selectedTitle)
                             .set(counter)
@@ -240,6 +242,7 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
                 builder.show();
             }
         });
+
 
 
 

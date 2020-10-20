@@ -5,6 +5,7 @@ import com.google.type.DateTime;
 
 public class kakaoPost {
 
+    public kakaoPost string;
     @SerializedName("body")
 
     //POST
@@ -31,19 +32,19 @@ public class kakaoPost {
     private String cancel_url;
 
 //    //GET
-//    private String tid;
-//
-//    private String next_redirect_app_url;
-//
-//    private String next_redirect_mobile_url;
-//
-//    private String next_redirect_pc_url;
-//
-//    private String android_app_scheme;
-//
-//    private String ios_app_scheme;
-//
-//    private DateTime created_at;
+    private String tid;
+
+    private String next_redirect_app_url;
+
+    private String next_redirect_mobile_url;
+
+    private String next_redirect_pc_url;
+
+    private String android_app_scheme;
+
+    private String ios_app_scheme;
+
+    private DateTime created_at;
 
 
     public kakaoPost(String cid,
@@ -56,14 +57,14 @@ public class kakaoPost {
                      Integer tax_free_amount,
                      String approval_url,
                      String fail_url,
-                     String cancel_url
-//                     String tid,
-//                     String next_redirect_app_url,
-//                     String next_redirect_mobile_url,
-//                     String next_redirect_pc_url,
-//                     String android_app_scheme,
-//                     String ios_app_scheme,
-//                     DateTime created_at
+                     String cancel_url,
+                     String tid,
+                     String next_redirect_app_url,
+                     String next_redirect_mobile_url,
+                     String next_redirect_pc_url,
+                     String android_app_scheme,
+                     String ios_app_scheme,
+                     DateTime created_at
     ){
         this.cid = cid;
         this.partner_order_id = partner_order_id;
@@ -76,13 +77,13 @@ public class kakaoPost {
         this.approval_url = approval_url;
         this.fail_url = fail_url;
         this.cancel_url = cancel_url;
-//        this.tid = tid;
-//        this.next_redirect_app_url = next_redirect_app_url;
-//        this.next_redirect_mobile_url = next_redirect_mobile_url;
-//        this.next_redirect_pc_url = next_redirect_pc_url;
-//        this.android_app_scheme = android_app_scheme;
-//        this.ios_app_scheme = ios_app_scheme;
-//        this.created_at = created_at;
+        this.tid = tid;
+        this.next_redirect_app_url = next_redirect_app_url;
+        this.next_redirect_mobile_url = next_redirect_mobile_url;
+        this.next_redirect_pc_url = next_redirect_pc_url;
+        this.android_app_scheme = android_app_scheme;
+        this.ios_app_scheme = ios_app_scheme;
+        this.created_at = created_at;
     }
 
     public String getCid() {
@@ -129,31 +130,33 @@ public class kakaoPost {
         return cancel_url;
     }
 
-//    public String getTid() {
-//        return tid;
-//    }
-//
-//    public String getNext_redirect_app_url() {
-//        return next_redirect_app_url;
-//    }
-//
-//    public String getNext_redirect_mobile_url() {
-//        return next_redirect_mobile_url;
-//    }
-//
-//    public String getNext_redirect_pc_url() {
-//        return next_redirect_pc_url;
-//    }
-//
-//    public String getAndroid_app_scheme() {
-//        return android_app_scheme;
-//    }
-//
-//    public String getIos_app_scheme() {
-//        return ios_app_scheme;
-//    }
-//
-//    public DateTime getCreated_at() {
-//        return created_at;
-//    }
+
+
+    public String getTid() {
+        return tid;
+    }
+
+    public String getNext_redirect_app_url() {
+        return next_redirect_app_url;
+    }
+
+    public String getNext_redirect_mobile_url() {
+        return next_redirect_mobile_url;
+    }
+
+    public String getNext_redirect_pc_url() {
+        return next_redirect_pc_url;
+    }
+
+    public String getAndroid_app_scheme() {
+        return android_app_scheme;
+    }
+
+    public String getIos_app_scheme() {
+        return ios_app_scheme;
+    }
+
+    public DateTime getCreated_at() {
+        return created_at;
+    }
 }

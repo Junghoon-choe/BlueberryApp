@@ -726,9 +726,9 @@ public class Login_Page extends AppCompatActivity {
                     });
         }
 
-        private void addUser(String email, String pw, String name, String phoneNum) {
+        private void addUser(String email, String name, String phoneNum) {
 
-            UserHelper userHelper = new UserHelper(email, pw, name, phoneNum);
+            UserHelper userHelper = new UserHelper(email, name, phoneNum);
 
             UsersCRef.document(email).set(userHelper)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {

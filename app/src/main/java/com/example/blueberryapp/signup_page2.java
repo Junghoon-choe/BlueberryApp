@@ -64,8 +64,19 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class signup_page2 extends AppCompatActivity {
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile("^" +
+                    "(?=.*[0-9])" +
+                    "(?=.*[a-z])" +
+                    "(?=.*[A-Z])" +
+                    "(?=.*[~`!@#$%\\^&*()-=])" +
+                    "(?=\\s+$)" +
+                    ".{10,16}" +
+                    "$");
 
 
     ArrayList<UserInfo> UserList = new ArrayList<>();
@@ -89,7 +100,7 @@ public class signup_page2 extends AppCompatActivity {
     private ImageSwitcher imageSwitcher;
 
     private Boolean CheckID = false;
-    private Boolean 비밀번호확인 = false;
+    private Boolean 비밀번호확인, 비밀번호입력 = false;
 
 
     private String Red = "#FF0000";
@@ -210,10 +221,6 @@ public class signup_page2 extends AppCompatActivity {
         thread.start();
 
 
-
-
-
-
         //아이디 중복 검사
         BT_중복체크.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,9 +320,9 @@ public class signup_page2 extends AppCompatActivity {
 
                 if (CheckID.equals(true)) {
                     UserRegister();
-                    addUser(Email, PW, Name, PhoneNum);
+                    addUser(Email,  Name, PhoneNum);
                 } else if (CheckID.equals(false)) {
-                    Toast.makeText(signup_page2.this, "중복 체크를 눌러서                                       이메일 사용여부를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(signup_page2.this, "중복 체크를 눌러서 이메일 확인해주세요.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -323,10 +330,10 @@ public class signup_page2 extends AppCompatActivity {
     }
 
     //Store에 추가함.
-    private void addUser(String email, String pw, String name, String phoneNum) {
+    private void addUser(String email, String name, String phoneNum) {
 
 
-        UserHelper userHelper = new UserHelper(email, pw, name, phoneNum);
+        UserHelper userHelper = new UserHelper(email, name, phoneNum);
 
         UsersCRef.document(email).set(userHelper)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -355,24 +362,24 @@ public class signup_page2 extends AppCompatActivity {
 
 
         if (Email.isEmpty()) {
-            ET_Email.setError("Enter an email address");
+            ET_Email.setError("이메일을 입력해주세요.");
             ET_Email.requestFocus();
             return;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
-            ET_Email.setError("Enter a valid email address");
+            ET_Email.setError("이메일 형식에 맞게 입력해주세요.");
             ET_Email.requestFocus();
             return;
         }
 
         if (PW.isEmpty()) {
-            ET_Password.setError("Enter a password");
+            ET_Password.setError("비밀번호를 입력해주세요.");
             ET_Password.requestFocus();
             return;
         }
 
-        if (PW.length() < 6) {
-            ET_Password.setError("Minimum length of a password should be 6");
+        if (PW.length() < 9) {
+            ET_Password.setError("비밀번호는 최소 10자 이상으로 작성해주세요.");
             ET_Password.requestFocus();
             return;
         }
@@ -411,23 +418,54 @@ public class signup_page2 extends AppCompatActivity {
 
             String PW = ET_Password.getText().toString(); // 트림은 앞뒤 공백을 없애줌, 가운데 없애는 건 replace이다.
             String PWChecked = ET_PasswordCheck.getText().toString();
+//            String valSymbol = "([0-9].*[!,@,#,^,&,*,(,)])|([!,@,#,^,&,*,(,)].*[0-9])";
+//            String val_alpha = "([a-z].*[A-Z])|([A-Z].*[a-z])";
+//            Pattern pattern_symbol = Pattern.compile(valSymbol);
+//            Pattern pattern_alpha = Pattern.compile(val_alpha);
+//            Matcher matcher_symbol = pattern_symbol.matcher(PW);
+//            Matcher matcher_alpha = pattern_alpha.matcher(PW);
 
+//            String pwPattern = "^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-z])(?=.*[A-Z]).{10,16}$";
+//            Pattern pattern_symbol = Pattern.compile(pwPattern);
+//            Matcher matcher_symbol = pattern_symbol.matcher(PW);
 
+            //비밀번호가 빈칸일때.
+            //TODO : 특수문자까지 가능하게 만들기.
             if (PW.equals("") && PWChecked.equals("")) {
                 PW_Check_Message.setTextColor(Color.parseColor(Black));
                 PW_Check_Message.setText("비밀번호를 입력해주세요.");
                 비밀번호확인 = false;
-            } else if (PW.equals(PWChecked)) {
+            }
+//            else if (!PASSWORD_PATTERN.matcher(PW).matches()) {
+//                PW_Check_Message.setTextColor(Color.parseColor(Red));
+//                PW_Check_Message.setText("특수문자와 영대소문자를 포함해주세요.");
+//                비밀번호확인 = false;
+//            }
+            else if (PW.equals(PWChecked)) {
                 PW_Check_Message.setTextColor(Color.parseColor(Blue));
                 PW_Check_Message.setText("비밀번호가 일치합니다.");
                 비밀번호확인 = true;
             } else {
                 PW_Check_Message.setTextColor(Color.parseColor(Red));
-                PW_Check_Message.setText("비밀번호를 확인해주세요.");
+                PW_Check_Message.setText("특수문자와 대소문자를 포함한 비밀번호를 입력해주세요.");
                 비밀번호확인 = false;
             }
 
+
+
+//            else if (PASSWORD_PATTERN.matcher(PW).matches()) {
+//                if (PW.equals(PWChecked)) {
+//                    PW_Check_Message.setTextColor(Color.parseColor(Blue));
+//                    PW_Check_Message.setText("비밀번호가 일치합니다.");
+//                    비밀번호확인 = true;
+//                } else {
+//                    PW_Check_Message.setTextColor(Color.parseColor(Red));
+//                    PW_Check_Message.setText("비밀번호를 중복확인 해주세요.");
+//                    비밀번호확인 = false;
+//                }
+//            }
         }
+
 
         @Override
         public void afterTextChanged(Editable s) {
