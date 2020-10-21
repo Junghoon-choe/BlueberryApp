@@ -157,7 +157,7 @@
                 android:id="@+id/BT_로그인박스"
                 android:layout_width="100dp"
                 android:layout_height="90dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/colorPrimary"
                 android:clickable="true"
                 android:gravity="center"
@@ -167,6 +167,20 @@
                 app:layout_constraintLeft_toRightOf="@id/ET_Email"
                 app:layout_constraintRight_toRightOf="@id/로그인배경"
                 app:layout_constraintTop_toTopOf="@id/로그인배경" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/BT_아패찾기"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="비밀번호\n찾기"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp"
+
+
+                app:layout_constraintRight_toRightOf="@id/BT_로그인박스"
+                app:layout_constraintLeft_toLeftOf="@id/BT_로그인박스"
+                app:layout_constraintTop_toBottomOf="@id/BT_로그인박스" />
 
 
 
@@ -222,22 +236,13 @@
                 android:id="@+id/ID_checkBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:text="아이디 저장"
                 app:layout_constraintBottom_toBottomOf="@+id/로그인배경"
-                app:layout_constraintEnd_toStartOf="@+id/Login_checkBox"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ET_Password" />
 
-            <com.google.android.material.checkbox.MaterialCheckBox
-                android:id="@+id/Login_checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="150dp"
-                android:text="자동 로그인"
-                app:layout_constraintBottom_toBottomOf="@+id/로그인배경"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/ID_checkBox"
-                app:layout_constraintTop_toBottomOf="@+id/ET_Password" />
+
 
 
 
@@ -252,19 +257,7 @@
 
 
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/BT_아패찾기"
-                android:layout_width="380dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="아이디 / 패스워드 찾기"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp"
 
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/BT_kakao로그인박스" />
 
             <ImageView
                 android:id="@+id/BT_아패찾기Box"
@@ -273,7 +266,7 @@
                 android:layout_marginTop="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/BT_아패찾기" />
+                app:layout_constraintTop_toBottomOf="@+id/BT_kakao로그인박스" />
 
             <TextView
                 android:id="@+id/비회원이신가요"

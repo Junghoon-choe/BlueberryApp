@@ -52,9 +52,9 @@ public class RE_ReviewAdapter extends RecyclerView.Adapter<RE_ReviewAdapter.Revi
         public ReviewHolder(@NonNull final View itemView) {
             super(itemView);
 
-            this.review_id = itemView.findViewById(R.id.review_id);
-            this.Title = itemView.findViewById(R.id.review_textview);
-            this.Writing = itemView.findViewById(R.id.review_textview2);
+//            this.review_id = itemView.findViewById(R.id.review_id);
+//            this.Title = itemView.findViewById(R.id.review_textview);
+//            this.Writing = itemView.findViewById(R.id.review_textview2);
 
 
 

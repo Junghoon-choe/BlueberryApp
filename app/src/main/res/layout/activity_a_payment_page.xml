@@ -126,11 +126,25 @@
             android:layout_height="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="16dp"
-            android:text="결제창"
+            android:text="상세 정보"
             android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/BT_매거진" />
+
+        <Button
+            android:id="@+id/BT_후기질문작성"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:textSize="20sp"
+            android:text="글작성"
+            android:visibility="gone"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/btn_blue"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/BT_매거진"
+            app:layout_constraintBottom_toTopOf="@id/선"
+            />
 
         <ImageView
             android:id="@+id/선"
@@ -142,9 +156,10 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/선택창"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/가로선"
+            android:layout_marginTop="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/선">
@@ -154,7 +169,6 @@
                 android:id="@+id/카드"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 app:cardBackgroundColor="#ffffffff"
                 app:cardCornerRadius="50dp"
                 app:cardElevation="10dp"
@@ -263,17 +277,96 @@
 
 
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ImageView
+            android:id="@+id/가로선1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colordarkgray"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/선택창"
+            />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/LL_QNA_REVIEW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/가로선1"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <Button
+                android:id="@+id/BT_QNA"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/BT_REVIEW"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="30sp"
+                android:textColor="#FFFFFF"
+                android:text="QNA"
+                android:backgroundTint="@color/colorPrimary"
+                android:background="@drawable/btn_blue"
+
+                />
+            <Button
+                android:id="@+id/BT_REVIEW"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="30sp"
+                android:text="REVIEW"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/BT_QNA"
+                android:background="@drawable/btn_blue"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RC_QNA"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/LL_QNA_REVIEW"
+            app:layout_constraintBottom_toBottomOf="@id/가로선"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RC_REVIEW"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/LL_QNA_REVIEW"
+            app:layout_constraintBottom_toBottomOf="@id/가로선"
+            />
 
         <ImageView
             android:id="@+id/가로선"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="400dp"
             android:background="@color/colordarkgray"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/선" />
+            app:layout_constraintTop_toBottomOf="@id/RC_QNA" />
 
 
         <ImageView

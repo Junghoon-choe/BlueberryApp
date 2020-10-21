@@ -6,74 +6,113 @@
     android:layout_height="match_parent"
     tools:context=".A_review_writing_page">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/Review_Title"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/IV_상품사진"
+        android:layout_width="175dp"
+        android:layout_height="173dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="121dp"
+        android:padding="5dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toTopOf="@+id/ET_상품명입력"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressbarId"
+        android:visibility="gone"
+        android:foregroundGravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginEnd="30dp"
-        app:counterMaxLength="20"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintEnabled="true"
-
-            app:hintAnimationEnabled="true"
-            android:hint="제목을 입력하세요."
-            app:counterEnabled="true"
-            android:textSize="18sp"
-            />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/Review_Writing"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="50dp"
-
-app:counterMaxLength="100"
-        app:layout_constraintTop_toBottomOf="@+id/Review_Title"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintEnabled="true"
-
-            app:hintAnimationEnabled="true"
-            android:hint="글을 입력해주세요."
-            app:counterEnabled="true"
-            android:textSize="18sp"
-            />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <Button
-        android:id="@+id/BT_Review_확인"
-        android:layout_width="300sp"
-        android:layout_height="50sp"
-        android:layout_marginBottom="50dp"
-        android:background="@drawable/btn_blue"
-        android:text="확인"
-        android:textColor="#ffffffff"
+        android:id="@+id/BT_사진추가"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="314dp"
+        android:text="사진추가"
+        app:layout_constraintBottom_toTopOf="@+id/ET_상품명입력"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.627"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.627" />
+
+
+
+    <TextView
+        android:id="@+id/원화"
+        android:text="￦"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ET_상품가격입력"
+        app:layout_constraintBottom_toBottomOf="@id/ET_상품가격입력"
+
+        app:layout_constraintHorizontal_bias="0.0"
         />
+
+    <EditText
+        android:id="@+id/ET_상품명입력"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="상품명입력"
+        android:layout_marginStart="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/ET_상품가격입력"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/ET_상품가격입력"
+        app:layout_constraintTop_toBottomOf="@id/IV_상품사진" />
+
+    <EditText
+        android:id="@+id/ET_상품가격입력"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="100dp"
+        android:hint="상품가격입력"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/원화"
+        app:layout_constraintTop_toBottomOf="@+id/ET_상품명입력" />
+
+    <EditText
+        android:id="@+id/ET_상품수량입력"
+        android:visibility="gone"
+        android:text="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/ET_상품가격입력"
+        app:layout_constraintTop_toBottomOf="@id/ET_상품가격입력"
+        android:hint="묶음 수량 입력"
+        />
+
+    <Button
+        android:id="@+id/BT_확인"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="확인"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_상품가격입력" />
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/ID_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/BT_사진추가"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

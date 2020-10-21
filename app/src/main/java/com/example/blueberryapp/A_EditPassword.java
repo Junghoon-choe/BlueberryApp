@@ -14,14 +14,12 @@ import com.google.firebase.database.core.view.View;
 public class A_EditPassword extends AppCompatActivity {
 
 
-
     TextInputLayout password, editPassword;
 
-    String PASSWORD,ID;
+    String PASSWORD, ID;
 
     private Button BT_수정확인;
     DatabaseReference reference;
-
 
 
     @Override
@@ -42,27 +40,18 @@ public class A_EditPassword extends AppCompatActivity {
         BT_수정확인.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View v) {
-                isPasswordChanged();
+
             }
         });
 
 
     }
 
-    public void upData(View view){
-        if (isPasswordChanged()) {
-            Toast.makeText(this,"정보가 바뀌었습니다.",Toast.LENGTH_LONG).show();
-        }
-        Toast.makeText(this,"정보가 안 바뀌었습니다.",Toast.LENGTH_LONG).show();
+    public void upData(View view) {
+
+        Toast.makeText(this, "정보가 바뀌었습니다.", Toast.LENGTH_LONG).show();
+
     }
 
-    private boolean isPasswordChanged(){
-        if (!PASSWORD.equals(password.getEditText().getText().toString())) {
-            reference.child(ID).child("password").setValue(password.getEditText().getText().toString());
-            PASSWORD = password.getEditText().getText().toString();
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 }

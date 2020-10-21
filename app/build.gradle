@@ -70,4 +70,15 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
 
 
+    //firebase UI에 사용될 실행목록
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+
+    // Required only if Facebook login support is required
+    // Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94
+    implementation 'com.facebook.android:facebook-android-sdk:5.12.1'
+
+    //Cirecular Image View 3rd party library
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+
 }

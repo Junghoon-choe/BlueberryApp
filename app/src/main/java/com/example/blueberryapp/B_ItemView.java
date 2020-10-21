@@ -59,25 +59,7 @@ public class B_ItemView extends AppCompatActivity implements RE_FoodAdapter.OnIt
 
     public boolean B_ItemView = false;
 
-
-    //    public Boolean checked;
-//
-//
-//    private String 실행 = "실행";
-//
-//
-//
-//    private RE_FoodAdapter mAdapter;
-//    private RecyclerView mRecyclerView;
-//    private Context mContext;
-//
     Button 추가; //바꿔야 하는 부분.
-//    private int count;
-//    private Thread thread;
-//
-//    // 체크박스 체크여부
-//    public int TERMS_AGREE = 0; // 체크 안됬을시 0, 체크 됬을 경우 1
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,28 +101,6 @@ public class B_ItemView extends AppCompatActivity implements RE_FoodAdapter.OnIt
             }
         });
 
-
-        //클릭이벤트 //해당 인덱스값을 넘기고 인덱스 값을 받아서 수정하거나 삭제 시켜야함.
-
-//        foodRecyclerAdapter.setOnItemClickListener(new OnFoodItemClickListener() {
-//            @Override
-//            public void onItemClick(RE_FoodAdapter.FoodViewHolder holder, View view, final int position) {
-//
-//
-//                RE_Food item = foodRecyclerAdapter.getItem(position);
-//
-//
-//                Toast.makeText(getApplicationContext(),
-//                        "position : " + "[" + position + "]" + item.getName(), Toast.LENGTH_SHORT).show();
-//
-//                final Intent intent = new Intent(B_ItemView.this, B_ItemClick.class);
-//
-//                intent.putExtra("position", position);
-//                intent.putExtra("title", item.getName());
-//                intent.putExtra("price", item.getPrice());
-//
-//            }
-//        });
     }
 
 

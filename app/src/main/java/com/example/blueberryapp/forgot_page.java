@@ -75,19 +75,19 @@ public class forgot_page extends AppCompatActivity {
         userPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 firebaseAuth.sendPasswordResetEmail(ET_Email.getText()
                         .toString())
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(forgot_page.this,"해당 이메일로 비밀번호를 전송하였습니다.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(forgot_page.this,"해당 이메일로 비밀번호 수정 메일을 보냈습니다.",Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(forgot_page.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
             }
         });
         //비밀번호 수정 구현

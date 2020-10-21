@@ -44,9 +44,9 @@ public class RE_QnAAdapter extends RecyclerView.Adapter<RE_QnAAdapter.ListViewHo
         ListViewHolder(final View itemView) {
             super(itemView);
 
-            this.qna_id = itemView.findViewById(R.id.qna_id);
-            this.title = itemView.findViewById(R.id.qna_title);
-            this.writing = itemView.findViewById(R.id.qna_writing);
+//            this.qna_id = itemView.findViewById(R.id.qna_id);
+//            this.title = itemView.findViewById(R.id.qna_title);
+//            this.writing = itemView.findViewById(R.id.qna_writing);
 
             //2. setOnCreateContextMenuListener를 현재 클래서에서 구현한다고 설정 해둔다.
             /*itemView.setOnCreateContextMenuListener(this);*/

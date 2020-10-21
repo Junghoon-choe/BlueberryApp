@@ -126,7 +126,7 @@
             android:layout_height="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="16dp"
-            android:text="결제창"
+            android:text="상세 정보"
             android:textSize="15dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"

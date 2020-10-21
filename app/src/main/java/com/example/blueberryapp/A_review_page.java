@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +36,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -45,30 +53,55 @@ import static com.example.blueberryapp.R.layout.edit_box;
 import static com.example.blueberryapp.R.layout.review_editbox;
 import static com.example.blueberryapp.R.layout.review_list;
 
-public class A_review_page extends AppCompatActivity {
-    static final int REQUEST = 100;
+public class A_review_page extends AppCompatActivity implements RE_REVIEW_test_Adapter.OnItemClickListener {
 
-    private static ArrayList<RE_Review> reviewList;
-    private RE_ReviewAdapter reviewAdapter;
+    //    static final int REQUEST = 100;
+//
+//    private static ArrayList<RE_Review> reviewList;
+//    private RE_ReviewAdapter reviewAdapter;
+    private Thread thread;
+    //
+    //    private RecyclerView mRecyclerView;
+//
+//    private Context mContext;
+//
+//
+    //    private EditText editTextTitle, editTextWriting;
     private Handler handler = new Handler();
     private boolean aBoolean;
-    private Thread thread;
     private ImageSwitcher imageSwitcher;
-
-    private RecyclerView mRecyclerView;
-
-    private Context mContext;
-
-
-    private EditText editTextTitle, editTextWriting;
     private Button BT_이용후기, BT_매거진, BT_질문답변, A_BT_글쓰기;
     private TextView TV_로그아웃, TV_마이페이지, TV_장바구니;
     private ImageView IV_사진, IV_전화기;
     private String 실행 = "실행";
-    private String userID = MyApplication.회원ID;
+//    private String userID = MyApplication.회원ID;
+//
+//    private FirebaseDatabase database;
+//    private DatabaseReference reference;
 
-    private FirebaseDatabase database;
-    private DatabaseReference reference;
+    //Widgets
+    RecyclerView recyclerView;
+
+    //Firebase
+    private DatabaseReference databaseReference;
+
+    private FirebaseFirestore DB = FirebaseFirestore.getInstance();
+    private CollectionReference StoreCRef = DB.collection("REVIEW");
+
+    // Variables
+    private ArrayList<RE_REVIEW_test> REVIEWList;
+    private RE_REVIEW_test_Adapter re_review_test_adapter;
+    private Context mContext;
+
+    private StorageReference mStorageRef = FirebaseStorage.getInstance().getReference("REVIEW_images");
+
+
+    private FirebaseFirestore firestore;
+    private FirebaseStorage mStorage;
+
+    public boolean B_ItemView = false;
+
+    Button 추가; //바꿔야 하는 부분.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +180,8 @@ public class A_review_page extends AppCompatActivity {
         thread.start();
 
 
-        mRecyclerView = findViewById(R.id.Re_review);
+
+       /* mRecyclerView = findViewById(R.id.Re_review);
         LinearLayoutManager ReviewLinearLayoutManager = new LinearLayoutManager(this);
         ReviewLinearLayoutManager.setReverseLayout(true);
         ReviewLinearLayoutManager.setStackFromEnd(true);
@@ -165,9 +199,25 @@ public class A_review_page extends AppCompatActivity {
         reviewList = new ArrayList<>();
 
         //Clear ArrayList
-        ClearAll();
+        ClearAll();*/
 
+        추가 = findViewById(R.id.BT_추가);
+        recyclerView = findViewById(R.id.Re_review);
 
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+
+        // 부가 기능
+        DividerItemDecoration FooddividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(FooddividerItemDecoration);
+
+        //Firebase
+//        databaseReference = FirebaseDatabase.getInstance().getReference();
+        firestore = FirebaseFirestore.getInstance();
+
+        mStorageRef = FirebaseStorage.getInstance().getReference("FoodImages");
 
 
         A_BT_글쓰기.setOnClickListener(new View.OnClickListener() {
@@ -176,10 +226,13 @@ public class A_review_page extends AppCompatActivity {
 
                 Intent intent = new Intent(A_review_page.this, A_review_writing_page.class);
                 startActivity(intent);
-
-
+                finish();
             }
         });
+
+        //TODO : Store에서 가져올수 있게 변경하기. 참조 가능하게 만들기.
+        //TODO : 아래 스냅샷에서 어떤역할을 하는지 정확히 알아보기.
+
 
 //        A_BT_글쓰기.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -363,59 +416,85 @@ public class A_review_page extends AppCompatActivity {
         });
     }
 
+    private void getDataFromFireStore() {
 
-    private void getDataFromFirebase() {
+        re_review_test_adapter = new RE_REVIEW_test_Adapter(A_review_page.this, REVIEWList);
+        recyclerView.setAdapter(re_review_test_adapter);
 
-        Query query = reference.child("Review");
+        //클릭 리스너 구현
+        re_review_test_adapter.setOnItemClickListener(A_review_page.this);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        StoreCRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ClearAll();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                    // push some data from firebase to class what I made already
-//                    RE_Food re_food = dataSnapshot.getValue(RE_Food.class);
-                    //                    foodList.add(re_food);
+                REVIEWList.clear();
 
-                    // ready to push data what in the box to RecyclerView
-
-                    RE_Review re_review = new RE_Review();
-
-
-                    re_review.setReViewTitle(Objects.requireNonNull(snapshot.child("reViewTitle").getValue()).toString());
-                    re_review.setReViewWriting(Objects.requireNonNull(snapshot.child("reViewWriting").getValue()).toString());
-
-                    reviewList.add(re_review);
-
+                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    RE_REVIEW_test re_review_test = documentSnapshot.toObject(RE_REVIEW_test.class);
+                    REVIEWList.add(re_review_test);
                 }
 
 
-                reviewAdapter = new RE_ReviewAdapter(mContext, reviewList);
-                //connect Adapter with RecyclerView
-                mRecyclerView.setAdapter(reviewAdapter);
-                reviewAdapter.notifyDataSetChanged();
+                re_review_test_adapter.notifyDataSetChanged();
 
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
         });
     }
 
 
+//    private void getDataFromFirebase() {
+//
+//        Query query = reference.child("Review");
+//
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                ClearAll();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//
+//                    // push some data from firebase to class what I made already
+////                    RE_Food re_food = dataSnapshot.getValue(RE_Food.class);
+//                    //                    foodList.add(re_food);
+//
+//                    // ready to push data what in the box to RecyclerView
+//
+//                    RE_Review re_review = new RE_Review();
+//
+//
+//                    re_review.setReViewTitle(Objects.requireNonNull(snapshot.child("reViewTitle").getValue()).toString());
+//                    re_review.setReViewWriting(Objects.requireNonNull(snapshot.child("reViewWriting").getValue()).toString());
+//
+//                    reviewList.add(re_review);
+//
+//                }
+//
+//
+//                reviewAdapter = new RE_ReviewAdapter(mContext, reviewList);
+//                //connect Adapter with RecyclerView
+//                mRecyclerView.setAdapter(reviewAdapter);
+//                reviewAdapter.notifyDataSetChanged();
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+
 
     private void ClearAll() {
-        if (reviewList != null) {
-            reviewList.clear();
-            if (reviewAdapter != null) {
-                reviewAdapter.notifyDataSetChanged();
+        if (REVIEWList != null) {
+            REVIEWList.clear();
+            if ( re_review_test_adapter!= null) {
+                re_review_test_adapter.notifyDataSetChanged();
             }
         }
 
-        reviewList = new ArrayList<>();
+        REVIEWList = new ArrayList<>();
     }
 
 
@@ -514,9 +593,14 @@ public class A_review_page extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // ArrayList
+        REVIEWList = new ArrayList<>();
+
+        //Clear ArrayList
+        ClearAll();
+
         // Get Data Method
-        getDataFromFirebase();
-        Log.v("A_review_onStart", 실행);
+        getDataFromFireStore();
 
     }
 
@@ -530,6 +614,7 @@ public class A_review_page extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.v("A_review_onPause", 실행);
+        B_ItemView = false;
 
     }
 
@@ -544,6 +629,51 @@ public class A_review_page extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.v("A_review_onDestroy", 실행);
+    }
+
+    //아이템 클릭 리스너 구현 >> 어댑터에 정의한 내용을 implement해서 가져와서 연동시킴.
+    @Override
+    public void onItemClick(int position) {
+        Toast.makeText(this, "클릭 포지션 값 : " + position, Toast.LENGTH_SHORT).show();
+
+
+    }
+
+    @Override
+    public void onWhatEverClick(int position) {
+        Toast.makeText(this, "이미 값 포지션 값 : " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDeletClick(int position) {
+        Toast.makeText(this, "지우기 포지션 값 : " + position, Toast.LENGTH_SHORT).show();
+
+        RE_REVIEW_test selectedItem = REVIEWList.get(position);
+        final String selectedTitle = selectedItem.getFoodName();
+
+        StoreCRef.document(selectedTitle)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(A_review_page.this, "아이템 삭제 완료.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // Create a storage reference from our app
+        StorageReference storageRef = mStorageRef;
+
+        // Create a reference to the file to delete
+        StorageReference desertRef = storageRef.child(selectedItem.FoodImageUrl);
+
+        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+            }
+        });
+
+
     }
 
  /*   @Override

@@ -2,9 +2,7 @@ package com.example.blueberryapp;
 
 import android.content.Context;
 import android.util.Log;
-
 import android.view.ContextMenu;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,27 +12,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-
 import java.util.ArrayList;
 
-public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHolder> implements OnFoodItemClickListener {
+public class RE_REVIEW_test_Adapter extends RecyclerView.Adapter<RE_REVIEW_test_Adapter.ViewHolder> implements OnFoodItemClickListener {
     //implements OnFoodItemClickListener
 
     private static final String Tag = "RecyclerView";
     public static final String IMAGE_INFO = "ImageInfo : ";
     private Context mContext;
-    private ArrayList<RE_Food> FoodList;
+    private ArrayList<RE_REVIEW_test> List;
     private OnItemClickListener mListener;
 
 
-    public RE_FoodAdapter(Context context, ArrayList<RE_Food> foodList) {
+    public RE_REVIEW_test_Adapter(Context context, ArrayList<RE_REVIEW_test> foodList) {
         this.mContext = context;
-        this.FoodList = foodList;
+        this.List = foodList;
     }
 
 //    public RE_FoodAdapter(ArrayList<RE_Food> foodList) {
@@ -44,10 +40,10 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
 
     @NonNull
     @Override
-    public RE_FoodAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RE_REVIEW_test_Adapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_item, parent, false);
-        RE_FoodAdapter.ViewHolder viewHolder = new RE_FoodAdapter.ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review_list, parent, false);
+        RE_REVIEW_test_Adapter.ViewHolder viewHolder = new RE_REVIEW_test_Adapter.ViewHolder(view);
 
         return new ViewHolder(view);
     }
@@ -55,24 +51,24 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        RE_Food re_foodCurrent = FoodList.get(position);
+        RE_REVIEW_test re_review_test = List.get(position);
 
         //TextView
-        holder.상품이름.setText(re_foodCurrent.getFoodName());
-        holder.상품가격.setText(re_foodCurrent.getFoodPrice()); //use for getting Number to adapter
+        holder.상품이름.setText(re_review_test.getFoodName());
+        holder.상품가격.setText(re_review_test.getFoodPrice()); //use for getting Number to adapter
 
 
         Glide.with(mContext)
                 .asBitmap()
                 .fitCenter().centerCrop()
-                .load(FoodList.get(position).getImageUrl())
+                .load(List.get(position).getImageUrl())
                 .into(holder.상품사진);
 
         //
 
 
         Log.d(IMAGE_INFO, "@@@@@@@1" + mContext);
-        Log.d(IMAGE_INFO, "@@@@@@@2" + re_foodCurrent.getImageUrl());
+        Log.d(IMAGE_INFO, "@@@@@@@2" + re_review_test.getImageUrl());
         Log.d(IMAGE_INFO, "@@@@@@@3" + holder.상품사진);
 
     }
@@ -81,23 +77,23 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
     public int getItemCount() {
         //삼합 연산자.
         // 참이면 사이즈 실행 거짓이면 0 실행.
-        return (null != FoodList ? FoodList.size() : 0);
+        return (null != List ? List.size() : 0);
     }
 
-    public RE_Food getItem(int position) {
-        return FoodList.get(position);
+    public RE_REVIEW_test getItem(int position) {
+        return List.get(position);
     }
 
-    public void setItems(ArrayList<RE_Food> items) {
-        this.FoodList = items;
+    public void setItems(ArrayList<RE_REVIEW_test> items) {
+        this.List = items;
     }
 
-    public void addItem(RE_Food item) {
-        FoodList.add(item);
+    public void addItem(RE_REVIEW_test item) {
+        List.add(item);
     }
 
-    public void setItem(int position, RE_Food item) {
-        FoodList.set(position, item);
+    public void setItem(int position, RE_REVIEW_test item) {
+        List.set(position, item);
     }
 
 

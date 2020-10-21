@@ -74,6 +74,8 @@ public class A_qna_page extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference reference;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

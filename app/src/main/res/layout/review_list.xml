@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -12,92 +12,95 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="horizontal">
 
 
-
-            <TextView
-                android:id="@+id/review_id"
-                app:layout_constraintHorizontal_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintRight_toRightOf="@id/abc"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_chainStyle="spread"
+            <ImageView
+                android:id="@+id/food_item_image"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:padding="5dp"
-                android:textAlignment="center"
-                android:text="회원 아아디"
-                android:textStyle="bold"/>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/abc"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_marginBottom="7dp"
-                android:layout_weight="1"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@mipmap/ic_launcher"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <LinearLayout
+                android:id="@+id/제목"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+
+                app:layout_constraintLeft_toRightOf="@id/food_item_image"
+                app:layout_constraintTop_toTopOf="parent"
+
+                >
 
                 <TextView
-                    android:id="@+id/TV_제목"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:text="제목 : "
-                    android:textSize="30sp"
-                    android:textStyle="normal"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/review_textview2"
-                    app:layout_constraintRight_toLeftOf="@+id/review_textview"
-
-                    />
-
-                <TextView
-                    android:id="@+id/review_textview"
-                    android:layout_width="302dp"
-                    android:layout_height="34dp"
-                    android:layout_marginTop="10dp"
-                    android:text="제목"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/TV_제목"
-                    app:layout_constraintLeft_toRightOf="@+id/TV_제목"
-                    app:layout_constraintTop_toTopOf="@+id/TV_제목" />
-
+                    android:textSize="15sp" />
 
 
                 <TextView
-                    android:id="@+id/review_textview2"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
+                    android:id="@+id/food_item_name"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="글"
-                    android:textColor="#ff0000ff"
-                    android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/TV_제목"
-                    />
+                    android:fontFamily="cursive"
+                    android:gravity="center"
+                    android:text="안녕하세요최정훈입니다람"
+                    android:maxLength="12"
+                    android:textColor="@color/colorblue"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="@id/제목"
+                app:layout_constraintTop_toBottomOf="@id/제목">
+
+                <TextView
+                    android:id="@+id/글내용글귀"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="내용 : "
+                    android:textSize="15sp" />
+
+
+                <TextView
+                    android:id="@+id/food_item_price"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+
+                    android:text="만나서 반가워요"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

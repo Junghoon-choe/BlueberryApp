@@ -15,11 +15,14 @@ import android.content.pm.Signature;
 import android.graphics.Color;
 import android.media.MediaSession2;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.se.omapi.Session;
 import android.service.textservice.SpellCheckerService;
+import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
@@ -108,6 +111,11 @@ public class Login_Page extends AppCompatActivity {
 
     private String userEmail, userPw, userName, userPhoneNum;
 
+    Session session;
+    private boolean Logined = false;
+
+    String myIp;
+
 
     public int TERMS_AGREE_1 = 0; // 체크 안됬을시 0, 체크 됬을 경우 1
     public int TERMS_AGREE_2 = 0;
@@ -155,9 +163,6 @@ public class Login_Page extends AppCompatActivity {
     };
 
 
-    Session session;
-
-
     //kakaoLogin을 위한 해쉬 키 값.
     private void getAppKeyHash() {
         try {
@@ -192,6 +197,12 @@ public class Login_Page extends AppCompatActivity {
         progressBar = findViewById(R.id.progressbarId);
 
         auth = FirebaseAuth.getInstance();
+
+        //쉐어드 아이디 저장 구현
+        WifiManager manager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        myIp = Formatter.formatIpAddress(manager.getConnectionInfo().getIpAddress());
+        Log.d("IP", "" + myIp);
+
 
 //카카오 로그인 구현
 
@@ -407,7 +418,7 @@ public class Login_Page extends AppCompatActivity {
     private void userLogin() {
 
         //사용자가 입력한 값을 Email, PW변수에 저장함.
-        String Email = ET_Email.getText().toString().trim();
+        final String Email = ET_Email.getText().toString().trim();
         String PW = ET_Password.getText().toString().trim();
 
 
@@ -462,89 +473,53 @@ public class Login_Page extends AppCompatActivity {
                     Log.d(TAG, "Email :" + Email);
 
 
-                    if (clickedBT_Login = true) {
-//                        if (userEmail.equals("Manager")) {
-//                            startActivity(new Intent(Login_Page.this, B_Manager_Page.class));
-//                            finish();
-//                        }
-                        Intent intent = new Intent(getApplicationContext(), A_main_page.class);
-
-                        MyApplication.회원Email = userEmail;
-                        MyApplication.회원Name = userName;
-                        MyApplication.회원PhoneNum = userPhoneNum;
-
-                        startActivity(intent);
-                        finish();
-                    }
-
-
                     Log.d(TAG, "회원Email :" + MyApplication.회원Email);
                 }
             });
         }
+        if (clickedBT_Login) {
+//auth에 로그인을 하기위해서 이메일과 패스워드를 입력 받는 메서드를 사용해서 Task를 통해 로그인 여부를 확인한다.
+            auth.signInWithEmailAndPassword(Email, PW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    progressBar.setVisibility(View.GONE);
+                    if (task.isSuccessful()) {
+                        Intent intent = new Intent(getApplicationContext(), A_main_page.class);
+                        startActivity(intent);
+                        MyApplication.회원Email = userEmail;
+                        MyApplication.회원Name = userName;
+                        MyApplication.회원PhoneNum = userPhoneNum;
+                        Logined = true;
+                        finish();
 
 
-//        progressBar.setVisibility(View.VISIBLE);
+//                        // 문자열 불러오기
+//                        String loadSharedName = ""; // 가져올 SharedPreferences 이름 지정
+//                        String loadKey = ""; // 가져올 데이터의 Key값 지정
+//                        String loadValue = ""; // 가져올 데이터가 담기는 변수
+//                        String defaultValue = ""; // 가져오는것에 실패 했을 경우 기본 지정 텍스트.
+//
+//                        SharedPreferences loadShared = getSharedPreferences(loadSharedName,MODE_PRIVATE);
+//                        loadValue = loadShared.getString(loadKey,defaultValue);
 
-        //        DocumentReference documentReference = DB.collection("Users").document("email");
+//                        // 문자열 데이터 삭제하기
+//                        String delSharedName = ""; // 저장된 SharedPreferences 이름 지정.
+//                        String delKey = ""; // 삭제할 데이터의  Key값 지정.
+//
+//                        SharedPreferences pref = getSharedPreferences(delSharedName, MODE_PRIVATE);
+//                        SharedPreferences.Editor dleEditor = pref.edit();
+//
+//                        dleEditor.remove(delKey);
+//                        dleEditor.commit();
 
 
-//        DocumentReference documentReference = UsersCRef.document(Email);
-//        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-//
-//                assert value != null;
-//                userEmail = value.getString("email");
-//                userPw = value.getString("pw");
-//                userName = value.getString("name");
-//                userPhoneNum = value.getString("phoneNum");
-//
-//                String Email = userEmail;
-//                String Pw = userPw;
-//                String Name = userName;
-//                String PhoneNum = userPhoneNum;
-//
-//
-//                Log.d(TAG, "Email :" + Email);
-//
-//
-//                if (clickedBT_Login = true) {
-//                    if (userEmail.equals("Manager")) {
-//                        startActivity(new Intent(Login_Page.this, B_Manager_Page.class));
-//                        finish();
-//                    }
-//                    Intent intent = new Intent(getApplicationContext(), A_main_page.class);
-//
-//                    MyApplication.회원Email = userEmail;
-//                    MyApplication.회원Name = userName;
-//                    MyApplication.회원PhoneNum = userPhoneNum;
-//
-//                    startActivity(intent);
-//                    finish();
-//                }
-//
-//
-//                Log.d(TAG, "회원Email :" + MyApplication.회원Email);
-//            }
-//        });
-
-        //auth에 로그인을 하기위해서 이메일과 패스워드를 입력 받는 메서드를 사용해서 Task를 통해 로그인 여부를 확인한다.
-        auth.signInWithEmailAndPassword(Email, PW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                progressBar.setVisibility(View.GONE);
-                if (task.isSuccessful()) {
-//                    Intent intent = new Intent(getApplicationContext(), A_main_page.class);
-//                    //TODO : 어떤 메서드인지 정확하게 파악할것.
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(intent);
-//                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "아이디 또는 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "아이디 또는 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     private Boolean validateUserEmail() {
@@ -586,6 +561,22 @@ public class Login_Page extends AppCompatActivity {
         super.onStart();
         Log.v("Login_onStart", 실행);
 
+
+        // 문자열 불러오기
+        String loadSharedName = myIp; // 가져올 SharedPreferences 이름 지정
+        String loadKey = ""; // 가져올 데이터의 Key값 지정
+        String loadValue = ""; // 가져올 데이터가 담기는 변수
+        boolean loadValueCheckBox = Boolean.parseBoolean(""); // 가져올 데이터가 담기는 변수
+        AppCompatCheckBox checkBox = null;
+        String defaultValue = ""; // 가져오는것에 실패 했을 경우 기본 지정 텍스트.
+
+        SharedPreferences loadShared = getSharedPreferences(loadSharedName, MODE_PRIVATE);
+        loadValueCheckBox = loadShared.getBoolean("아이디체크박스", false);
+        loadValue = loadShared.getString("회원아이디정보", defaultValue);
+
+        ET_Email.setText(loadValue);
+        ID_checkBox.setChecked(loadValueCheckBox);
+
     }
 
     @Override
@@ -598,12 +589,28 @@ public class Login_Page extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.v("Login_onPause", 실행);
+
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.v("Login_onStop", 실행);
+        if (!ID_checkBox.isChecked()) {
+            String saveSharedName = myIp; // 저장할 SharedPreferences 이름 지정.
+//                            String saveKey = ""; // 저장할 데이터의 Key값 지정.
+//                            String saveValue = ""; //저장할 데이터의 Content 지정.
+
+            SharedPreferences saveShared = getSharedPreferences(saveSharedName, MODE_PRIVATE);
+            SharedPreferences.Editor sharedEditor = saveShared.edit();
+
+            sharedEditor.putBoolean("아이디체크박스", false);
+            sharedEditor.putString("회원아이디정보", "");
+            sharedEditor.apply();
+            sharedEditor.commit();
+            Toast.makeText(Login_Page.this, "버튼 x 쉐어드 저장됨", Toast.LENGTH_SHORT).show();
+        }
     }
 
     //카카오 로그인 구현
@@ -613,6 +620,38 @@ public class Login_Page extends AppCompatActivity {
         Log.v("Login_onDestroy", 실행);
         //세션 콜백 삭제
         com.kakao.auth.Session.getCurrentSession().removeCallback(sessionCallback);
+
+        if (Logined) {
+            if (ID_checkBox.isChecked()) {
+                // 문자열 저장하기
+                String saveSharedName = myIp; // 저장할 SharedPreferences 이름 지정.
+//                            String saveKey = ""; // 저장할 데이터의 Key값 지정.
+//                            String saveValue = ""; //저장할 데이터의 Content 지정.
+
+                SharedPreferences saveShared = getSharedPreferences(saveSharedName, MODE_PRIVATE);
+                SharedPreferences.Editor sharedEditor = saveShared.edit();
+
+                sharedEditor.putBoolean("아이디체크박스", true);
+                sharedEditor.putString("회원아이디정보", userEmail);
+                sharedEditor.apply();
+                sharedEditor.commit();
+                Toast.makeText(Login_Page.this, "버튼 o 쉐어드 저장됨", Toast.LENGTH_SHORT).show();
+            } else if (!ID_checkBox.isChecked()) {
+                String saveSharedName = myIp; // 저장할 SharedPreferences 이름 지정.
+//                            String saveKey = ""; // 저장할 데이터의 Key값 지정.
+//                            String saveValue = ""; //저장할 데이터의 Content 지정.
+
+                SharedPreferences saveShared = getSharedPreferences(saveSharedName, MODE_PRIVATE);
+                SharedPreferences.Editor sharedEditor = saveShared.edit();
+
+                sharedEditor.putBoolean("아이디체크박스", false);
+                sharedEditor.putString("회원아이디정보", "");
+                sharedEditor.apply();
+                sharedEditor.commit();
+                Toast.makeText(Login_Page.this, "버튼 x 쉐어드 저장됨", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
     @Override
@@ -746,5 +785,7 @@ public class Login_Page extends AppCompatActivity {
         }
 
     }
+
+
 }
 

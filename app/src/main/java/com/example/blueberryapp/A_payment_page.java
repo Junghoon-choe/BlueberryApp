@@ -2,6 +2,7 @@ package com.example.blueberryapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -40,6 +41,10 @@ public class A_payment_page extends AppCompatActivity {
     private Thread thread;
     private ImageSwitcher imageSwitcher;
 
+    //상세정보창 안에 리사이클러뷰 구현
+    private Button BT_QNA,BT_REVIEW,BT_후기질문작성;
+    private RecyclerView RC_QNA, RC_REVIEW;
+
     ArrayList<UserInfo> UserList;
 
 //    private FirebaseDatabase database;
@@ -49,6 +54,7 @@ public class A_payment_page extends AppCompatActivity {
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private CollectionReference UsersCRef = firestore.collection("Users");
     private CollectionReference BasketCRef = UsersCRef.document().collection("Basket");
+
 
 
     @Override
@@ -69,6 +75,31 @@ public class A_payment_page extends AppCompatActivity {
         Log.v("A_payment_onCreate", 실행);
         IV_전화기 = findViewById(R.id.IV_전화기);
         imageSwitcher = findViewById(R.id.A결재창광고창);
+
+        //상세정보창 안에 리사이클러뷰 구현
+        BT_QNA = findViewById(R.id.BT_QNA);
+        BT_REVIEW = findViewById(R.id.BT_REVIEW);
+        BT_후기질문작성 = findViewById(R.id.BT_후기질문작성);
+
+        RC_QNA =findViewById(R.id.RC_QNA);
+        RC_REVIEW = findViewById(R.id.RC_REVIEW);
+
+
+        //TODO : 버튼 클릭시 색상 바꾸기. >> 연분홍 색으로 수정할 것.
+        BT_QNA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RC_QNA.setVisibility(View.VISIBLE);
+            }
+        });
+
+        BT_REVIEW.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RC_REVIEW.setVisibility(View.VISIBLE);
+            }
+        });
+
 
         //Thread
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
@@ -147,6 +178,19 @@ public class A_payment_page extends AppCompatActivity {
         food_item_name.setText(FoodName);
         food_item_price.setText(FoodPrice);
         Picasso.with(this).load(FoodImage).into(food_item_image);
+
+//        BT_후기질문작성.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(A_payment_page.this, A_Writing_Page.class);
+//                intent.putExtra("FoodNameToWriting",FoodName);
+//                intent.putExtra("FoodPriceToWriting",FoodPrice);
+//                intent.putExtra("FoodImageToWriting",FoodImage);
+//                intent.putExtra("FoodAmountToWriting",FoodAmount);
+//                finish();
+//            }
+//        });
+
 
 
         BT_장바구니추가.setOnClickListener(new View.OnClickListener() {
@@ -334,6 +378,36 @@ public class A_payment_page extends AppCompatActivity {
             }
         });
     }
+
+//    private void WritingItemQnR(final String foodName, final String foodPrice, final String foodImage, final String foodAmount){
+//        RE_Food re_food = new RE_Food(foodName, foodPrice, foodImage, foodAmount);
+//
+//        QnRCRef.document(foodName).set(re_food).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//
+//                Intent intent = new Intent(A_payment_page.this, A_Writing_Page.class);
+//
+//                intent.putExtra("FoodName", foodName);
+//
+//                startActivity(intent);
+//
+//                Log.d(TAG, "Document has been saved!");
+//                Toast.makeText(A_payment_page.this, "Document saved!", Toast.LENGTH_SHORT).show();
+//                finish();
+//
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d(TAG, "Document was not saved!", e);
+//                Toast.makeText(A_payment_page.this, "Error!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//
+//
+//    }
 
     @Override
     protected void onStart() {

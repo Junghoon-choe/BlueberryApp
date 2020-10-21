@@ -1,5 +1,6 @@
 package com.example.blueberryapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,8 +16,11 @@ import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
@@ -213,8 +217,25 @@ public class A_Member_information_page extends AppCompatActivity {
         BT_수정버튼.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(A_Member_information_page.this, A_EditPassword.class);
-                startActivity(intent);
+                final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+                BT_수정버튼.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        firebaseAuth.sendPasswordResetEmail(MyApplication.회원Email)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(A_Member_information_page.this,"회원님 이메일로 비밀번호 수정 메일을 보냈습니다.",Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(A_Member_information_page.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+                    }
+                });
 
             }
         });

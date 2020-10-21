@@ -125,8 +125,6 @@ public class B_AddItem extends AppCompatActivity implements View.OnClickListener
         if (edit_amount.getText() == null) {
             edit_amount.setText("1");
         }
-
-
     }
 
     @Override

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".GlobalApplication"
@@ -14,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".kakaoPay"></activity>
+        <activity android:name=".A_Writing_Page"></activity>
+        <activity android:name=".kakaoPay" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
