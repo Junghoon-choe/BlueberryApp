@@ -69,8 +69,14 @@ public class Reply_Adapter extends RecyclerView.Adapter<Reply_Adapter.ViewHolder
         holder.TV_userName.setText(ReplyCurrent.getUserName());
         holder.TV_reply.setText(ReplyCurrent.getWriting());
 
+        Reply selectedItem = List.get(position);
+        String selectedTitle = selectedItem.getUserEmail();
 
+        String CheckEmail = MyApplication.회원Email;
 
+        if (!CheckEmail.equals(selectedTitle)) {
+            holder.IV_댓글삭제.setVisibility(View.INVISIBLE);
+        }
 
         holder.IV_댓글삭제.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +97,7 @@ public class Reply_Adapter extends RecyclerView.Adapter<Reply_Adapter.ViewHolder
                                     Reply selectedItem = List.get(position);
                                     String selectedTitle = selectedItem.getDocuName();
                                     final String selectedDocu = MyApplication.ReplyDocuName;
-                                    Log.d("12312312312","12312312"+selectedDocu);
+                                    Log.d("12312312312", "12312312" + selectedDocu);
 
 
                                     ReplyCRef.document(selectedDocu).collection("댓글").document(selectedTitle)

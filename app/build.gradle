@@ -36,7 +36,7 @@ dependencies {
     //자동으로 라이브러리버전을 최신버전으로 만들어주는 플랫폼이다.
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-storage'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.android.volley:volley:1.1.1' // 서버 통신 관련 라이브러리.
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 

@@ -1,6 +1,7 @@
 package com.example.blueberryapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import android.view.ContextMenu;
@@ -30,6 +31,8 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
     private Context mContext;
     private ArrayList<RE_Food> FoodList;
     private OnItemClickListener mListener;
+
+
 
 
     public RE_FoodAdapter(Context context, ArrayList<RE_Food> foodList) {
@@ -66,14 +69,25 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
                 .asBitmap()
                 .fitCenter().centerCrop()
                 .load(FoodList.get(position).getImageUrl())
-                .into(holder.상품사진);
-
-        //
+                .into(holder.상품사진); // << 쉐어드에 저장하기.
 
 
-        Log.d(IMAGE_INFO, "@@@@@@@1" + mContext);
-        Log.d(IMAGE_INFO, "@@@@@@@2" + re_foodCurrent.getImageUrl());
-        Log.d(IMAGE_INFO, "@@@@@@@3" + holder.상품사진);
+        /*
+        // 문자열 저장하기
+        String saveSharedName = ""; // 저장할 SharedPreferences 이름 지정.
+        String saveKey = ""; // 저장할 데이터의 Key값 지정.
+        String saveValue = ""; //저장할 데이터의 Content 지정.
+
+        SharedPreferences saveShared = getSharedPreferences(saveSharedName,MODE_PRIVATE);
+        SharedPreferences.Editor sharedEditor = saveShared.edit();
+
+        sharedEditor.putString(saveKey,saveValue);
+
+        sharedEditor.commit();
+        */
+
+        //여기서 쉐어드에 넣어주고 받아와서 상품사진에 넣어주기.
+
 
     }
 
@@ -124,6 +138,7 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
 
         public TextView 상품이름, 상품가격;
         public ImageView 상품사진;
+
 
 
         public ViewHolder(@NonNull final View itemView) {

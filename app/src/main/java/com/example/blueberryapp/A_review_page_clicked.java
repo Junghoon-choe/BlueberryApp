@@ -75,7 +75,14 @@ public class A_review_page_clicked extends AppCompatActivity {
         BT_댓글추가.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                댓글추가();
+
+                if (ET_댓글.getText().toString() == null) {
+                    Toast.makeText(A_review_page_clicked.this, "댓글을 작성해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    댓글추가();
+                }
+
             }
         });
     }
@@ -86,7 +93,7 @@ public class A_review_page_clicked extends AppCompatActivity {
 
         Intent intent = getIntent();
         다큐제목 = intent.getExtras().getString("다큐제목");
-        Log.d("@@#!@#!@#$!@", "ReplyDocuName > "+다큐제목);
+        Log.d("@@#!@#!@#$!@", "ReplyDocuName > " + 다큐제목);
         Image = intent.getExtras().getString("Image");
         title = intent.getExtras().getString("Title");
         writing = intent.getExtras().getString("Writing");
@@ -117,7 +124,7 @@ public class A_review_page_clicked extends AppCompatActivity {
     private void ClearAll() {
         if (List != null) {
             List.clear();
-            if (replyAdapter!= null) {
+            if (replyAdapter != null) {
                 replyAdapter.notifyDataSetChanged();
             }
         }
@@ -153,15 +160,22 @@ public class A_review_page_clicked extends AppCompatActivity {
     private void 댓글추가() {
 
         String 댓글 = ET_댓글.getText().toString();
-        String 작성자 = MyApplication.회원Name;
+        if (댓글.isEmpty()){
+            Toast.makeText(A_review_page_clicked.this,"댓글을 적어주세요.",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+            String 작성자 = MyApplication.회원Name;
         String 현재시간 = String.valueOf(System.currentTimeMillis());
+        String 작성자이메일 = MyApplication.회원Email;
 
 
         String 댓글다큐제목 = 현재시간 + 작성자 + 댓글;
 
         Toast.makeText(A_review_page_clicked.this, "업로드 성공", Toast.LENGTH_SHORT).show();
 
-        Reply reply = new Reply(댓글, 작성자, 현재시간, 댓글다큐제목);
+        Reply reply = new Reply(댓글, 작성자, 현재시간, 댓글다큐제목, 작성자이메일);
+
         ReviewCRef.document(다큐제목).collection("댓글").document(댓글다큐제목).set(reply);
 
         startActivity(new Intent(A_review_page_clicked.this, A_review_page.class));

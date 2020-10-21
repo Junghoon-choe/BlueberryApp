@@ -119,10 +119,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RC_Review"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="400dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/댓글윗선" />
+            app:layout_constraintTop_toBottomOf="@id/댓글윗선"
+            />
 
         <ImageView
             android:id="@+id/댓글아랫선"
