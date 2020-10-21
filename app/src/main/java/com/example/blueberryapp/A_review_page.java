@@ -234,111 +234,6 @@ public class A_review_page extends AppCompatActivity implements RE_REVIEW_test_A
         //TODO : 아래 스냅샷에서 어떤역할을 하는지 정확히 알아보기.
 
 
-//        A_BT_글쓰기.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                /*Intent intent = new Intent(A_review_page.this, A_add_review.class);
-//
-//                startActivityForResult(intent,REQUEST);*/
-//
-//
-//                //1. 글쓰기 버튼을 클릭하면
-//
-//                //2. 레이아웃 파일 edit_box를 불러와서 화면에 다이얼로그를 보여줍니다.
-//                AlertDialog.Builder builder = new AlertDialog.Builder(A_review_page.this);
-//                View view = LayoutInflater.from(A_review_page.this).inflate(review_editbox, null, false);
-//                builder.setView(view);
-//
-//
-//                //
-//                // QnA생성자를 사용하여 어레이리스트에 삽입할 데이터를 만든다.
-//                // RE_QnA data = new RE_QnA(count+"","제목"+count,"글 입력");
-//
-//                //                 mArrayList.add(0, qna); >> 뷰의 첫줄에 삽입
-//                //                mArrayList.add(data); >> 뷰의 마지막줄에 삽입
-//
-//                //                  mAdapter.notifyDataSetChanged(); 변경된 데이터를 화면에 반영한다
-//
-//
-//                final Button ButtonSubmit = view.findViewById(R.id.BT_edit);
-//
-//                final EditText editTextTitle = view.findViewById(R.id.review_edit_title);
-//                final EditText editTextWriting = view.findViewById(R.id.review_edit_writing);
-//
-//
-//                Log.v("실행", String.valueOf(ButtonSubmit));
-//                ButtonSubmit.setText("데이터 추가");
-//
-//
-//                final AlertDialog dialog = builder.create();
-//                ButtonSubmit.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//
-//                        SharedPreferences 후기 = getSharedPreferences("후기정보", MODE_PRIVATE);
-//                        SharedPreferences.Editor editor = 후기.edit(); // 사용자가 입력한 내용을 저장할 데이터 이름 = 후기정보
-//
-//                        String strId = userID;
-//
-//                        String strTitle = editTextTitle.getText().toString();
-//                        String strWriting = editTextWriting.getText().toString();
-//
-//                        RE_Review review = new RE_Review(strId, strTitle, strWriting);
-//                        ReviewArrayList.add(review);// 첫줄에 삽입*//*
-//
-//                        //mArrayList.add(qna); >> 마지막 줄에 삽입
-//                        ReviewAdapter.notifyDataSetChanged(); // 변경된 데이터를 화면에 반영
-//
-//                        Gson gson = new Gson();
-//                        String userListResult = gson.toJson(review);
-//                        editor.putString(strId, userListResult);
-//                        editor.apply();
-//
-//                        //--------------
-//
-//                        dialog.dismiss();
-//                    }
-//                });
-//                dialog.show();
-//
-//
-//               /* count ++;
-//                RE_QnA data = new RE_QnA(count+"","제목"+count,"글 입력");
-//
-//
-//
-//
-//                mArrayList.add(data);
-//                mAdapter.notifyDataSetChanged();*/
-//
-//            }
-//        });
-
-//        //클릭이벤트
-//        reviewAdapter.setOnReviewItemClickListener(new OnReviewItemClickListener() {
-//            @Override
-//            public void onReviewItemClick(RE_ReviewAdapter.ReviewHolder reviewHolder, View view, int position) {
-//                {
-//                    RE_Review item = reviewAdapter.getItem(position);
-//                    Toast.makeText(getApplicationContext(),
-//                            "아이템 선택됨 : " + item.getReViewTitle(), Toast.LENGTH_SHORT).show();
-//
-//                    Intent intent = new Intent(getBaseContext(), A_review_page.class);
-//
-//
-//                    intent.putExtra("ReViewTitle", item.getReViewTitle());
-//                    intent.putExtra("ReViewWriting", item.getReViewWriting());
-//
-//                    startActivity(intent);
-//
-//
-//                }
-//            } // 어댑터에 리스너 설정하기.
-//
-//
-//        });
-
         IV_전화기.setClickable(true);
         IV_전화기.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -489,7 +384,7 @@ public class A_review_page extends AppCompatActivity implements RE_REVIEW_test_A
     private void ClearAll() {
         if (REVIEWList != null) {
             REVIEWList.clear();
-            if ( re_review_test_adapter!= null) {
+            if (re_review_test_adapter != null) {
                 re_review_test_adapter.notifyDataSetChanged();
             }
         }
@@ -622,7 +517,6 @@ public class A_review_page extends AppCompatActivity implements RE_REVIEW_test_A
     protected void onStop() {
         super.onStop();
         Log.v("A_review_onStop", 실행);
-
     }
 
     @Override
@@ -636,7 +530,26 @@ public class A_review_page extends AppCompatActivity implements RE_REVIEW_test_A
     public void onItemClick(int position) {
         Toast.makeText(this, "클릭 포지션 값 : " + position, Toast.LENGTH_SHORT).show();
 
+        RE_REVIEW_test selectedItem = REVIEWList.get(position);
+        final String selectedTitle = selectedItem.getTitle_Review();
 
+
+        String 다큐제목 = REVIEWList.get(position).getDocuName();
+        String title = REVIEWList.get(position).getTitle_Review();
+        String writing = REVIEWList.get(position).getWritingReview();
+        String Image = REVIEWList.get(position).getImageUrl();
+        String userName = REVIEWList.get(position).getUserName();
+
+        Log.d("Test",">"+writing);
+        Log.d("Test",">"+userName);
+
+        Intent intent = new Intent(A_review_page.this, A_review_page_clicked.class);
+        intent.putExtra("다큐제목",다큐제목);
+        intent.putExtra("Title",title);
+        intent.putExtra("Writing",writing);
+        intent.putExtra("Image",Image);
+        intent.putExtra("UserName",userName);
+        startActivity(intent);
     }
 
     @Override
@@ -649,7 +562,7 @@ public class A_review_page extends AppCompatActivity implements RE_REVIEW_test_A
         Toast.makeText(this, "지우기 포지션 값 : " + position, Toast.LENGTH_SHORT).show();
 
         RE_REVIEW_test selectedItem = REVIEWList.get(position);
-        final String selectedTitle = selectedItem.getFoodName();
+        final String selectedTitle = selectedItem.getTitle_Review();
 
         StoreCRef.document(selectedTitle)
                 .delete()
@@ -660,51 +573,17 @@ public class A_review_page extends AppCompatActivity implements RE_REVIEW_test_A
                     }
                 });
 
-        // Create a storage reference from our app
-        StorageReference storageRef = mStorageRef;
-
-        // Create a reference to the file to delete
-        StorageReference desertRef = storageRef.child(selectedItem.FoodImageUrl);
-
-        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // File deleted successfully
-            }
-        });
-
-
+//        // Create a storage reference from our app
+//        StorageReference storageRef = mStorageRef;
+//
+//        // Create a reference to the file to delete
+//        StorageReference desertRef = storageRef.child(selectedItem.ImageUrl);
+//
+//        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                // File deleted successfully
+//            }
+//        });
     }
-
- /*   @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-
-
-        if (requestCode == REQUEST) {
-
-            // epdlxjfmf 받아옴.
-
-
-
-            String 제목 = data.getExtras().getString("ReViewTitle");
-            String 후기글 = data.getExtras().getString("ReViewWriting");
-
-
-            data.getStringExtra("ReViewTitle");
-            data.getStringExtra("ReViewWriting");
-
-            RE_Review re_review = new RE_Review(userID,제목,후기글);
-            ReviewArrayList.add(re_review);
-            ReviewAdapter.notifyDataSetChanged();
-
-        }
-
-
-    }*/
-
 }

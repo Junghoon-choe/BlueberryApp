@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".A_Writing_Page"></activity>
+        <activity android:name=".A_review_page_clicked"></activity>
+        <activity android:name=".A_Writing_Page" />
         <activity android:name=".kakaoPay" />
 
         <meta-data

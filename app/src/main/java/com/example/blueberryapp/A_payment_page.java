@@ -162,7 +162,6 @@ public class A_payment_page extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-
         final String FoodName = intent.getExtras().getString("FoodName");
         final String FoodPrice = intent.getExtras().getString("FoodPrice");
         final String FoodImage = intent.getExtras().getString("FoodImage");

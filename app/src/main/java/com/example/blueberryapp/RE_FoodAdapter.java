@@ -108,6 +108,11 @@ public class RE_FoodAdapter extends RecyclerView.Adapter<RE_FoodAdapter.ViewHold
         }
     }
 
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
     public void setOnItemClickListener(OnFoodItemClickListener listener) {
         this.foodListener = listener;
     }

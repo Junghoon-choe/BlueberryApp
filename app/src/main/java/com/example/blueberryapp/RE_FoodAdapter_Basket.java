@@ -264,6 +264,11 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
         }
     }
 
+    @Override
+    public void onItemClick(int position) {
+
+    }
+
     public void setOnItemClickListener(OnFoodItemClickListener listener) {
         this.notifyDataSetChanged();
         this.foodListener = listener;

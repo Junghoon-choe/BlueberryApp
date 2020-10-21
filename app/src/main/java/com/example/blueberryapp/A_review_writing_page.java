@@ -63,6 +63,7 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
     private Uri mImageUri = null;
     private ProgressBar progressBar;
     String compressor;
+    String 다큐제목;
 
     private FirebaseFirestore DB = FirebaseFirestore.getInstance();
     private CollectionReference foodStoreCRef = DB.collection("REVIEW");
@@ -129,6 +130,8 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
                     Toast.makeText(A_review_writing_page.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadFile();
+
+
                 }
             }
         });
@@ -138,10 +141,11 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
     private void uploadFile() {
         progressBar.setVisibility(View.VISIBLE);
 
-
         final String ReviewTitle = edit_title.getText().toString().trim();
         final String ReviewWriting = edit_price.getText().toString().trim();
-
+        final String 다큐제목 = MyApplication.회원Email+System.currentTimeMillis();
+        final String 작성자이름  = MyApplication.회원Name.trim();
+        final String 작성자이메일 = MyApplication.회원Email.trim();
 
         if (ReviewTitle.isEmpty() || ReviewWriting.isEmpty()) {
             return;
@@ -149,7 +153,6 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
 
             //여기에서 foodImage폴더에 넣을수 있게 던져줌. 하위항목 이름 지어줄수 있는 곳.
             //파일을 생성하는 fileRef를 선언.
-
 
             //하위 항목으로 이미지의 이름을 지어준다. child에서 현재 시간으로 이름을 지어준다. 뒤에부분은 .jpg로 확장자를 작명하는 곳 이다.
             final StorageReference fileRef = mStorageRef.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
@@ -165,18 +168,18 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
                         }
                     }, 500);
 
-
                     fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
 
-                            RE_REVIEW_test re_review_test = new RE_REVIEW_test(edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), uri.toString(), edit_amount.getText().toString().trim());
+                            RE_REVIEW_test re_review_test = new RE_REVIEW_test(작성자이메일,다큐제목,edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), uri.toString(),작성자이름);
                             Toast.makeText(A_review_writing_page.this, "업로드 성공", Toast.LENGTH_SHORT).show();
 
+                            foodStoreCRef.document(다큐제목).set(re_review_test);
 
-                            foodStoreCRef.document(edit_title.getText().toString().trim()).set(re_review_test);
-
-                            startActivity(new Intent(A_review_writing_page.this, A_review_page.class));
+                            Intent intent = new Intent(A_review_writing_page.this, A_review_page.class);
+                            intent.putExtra("리뷰제목",다큐제목);
+                            startActivity(intent);
                             finish();
                         }
                     });
@@ -189,17 +192,17 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
                 }
             });
         } else {
-            RE_REVIEW_test re_review_test = new RE_REVIEW_test(edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), null, edit_amount.getText().toString().trim());
+            RE_REVIEW_test re_review_test = new RE_REVIEW_test(작성자이메일,다큐제목,edit_title.getText().toString().trim(), edit_price.getText().toString().trim(), null,작성자이름);
             Toast.makeText(A_review_writing_page.this, "업로드 성공", Toast.LENGTH_SHORT).show();
 
+            foodStoreCRef.document(다큐제목).set(re_review_test);
 
-            foodStoreCRef.document(edit_title.getText().toString().trim()).set(re_review_test);
-
-            startActivity(new Intent(A_review_writing_page.this, A_review_page.class));
+            Intent intent = new Intent(A_review_writing_page.this, A_review_page.class);
+            intent.putExtra("리뷰제목",다큐제목);
+            startActivity(intent);
             finish();
         }
     }
-
 
     //    // TODO : 아래 메서드 이해하기.
     private String getFileExtension(Uri uri) {
@@ -215,7 +218,6 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -225,7 +227,6 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
             mImageUri = data.getData();
 
             Picasso.with(this).load(mImageUri).into(상품사진);
-
 
         }
     }

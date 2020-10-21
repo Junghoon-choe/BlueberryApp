@@ -4,6 +4,8 @@ import android.view.View;
 
 public interface OnFoodItemClickListener {
     void onItemClick( View view, int position);
+
+    void onItemClick(int position);
 }
 
 
