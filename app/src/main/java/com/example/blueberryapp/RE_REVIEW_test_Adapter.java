@@ -82,6 +82,7 @@ public class RE_REVIEW_test_Adapter extends RecyclerView.Adapter<RE_REVIEW_test_
 
         RE_REVIEW_test selectedItem = List.get(position);
         String selectedTitle = selectedItem.getDocuName();
+
         if (!selectedItem.get작성자이메일().equals(MyApplication.회원Email)) {
             holder.mDeleteImage.setVisibility(View.INVISIBLE);
         }

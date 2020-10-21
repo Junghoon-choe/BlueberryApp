@@ -69,7 +69,6 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_list, parent, false);
-
         ViewHolder viewHolder = new ViewHolder(view);
         return new ViewHolder(view);
     }

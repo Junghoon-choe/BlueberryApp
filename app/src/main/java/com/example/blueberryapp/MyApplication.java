@@ -16,6 +16,7 @@ public class MyApplication extends Application {
 
 
     public static String 결제금액="";
+    public static String ReplyDocuName;
 
 
 

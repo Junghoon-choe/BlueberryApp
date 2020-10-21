@@ -1,19 +1,21 @@
 package com.example.blueberryapp;
 
-public class Reply {
+public class Reply extends RE_REVIEW_test {
 
     private String writing;
     private String userName;
     private String time;
+    private String DocuName;
 
 
     public Reply() {
     }
 
-    public Reply(String writing, String userName, String time) {
+    public Reply(String writing, String userName, String time, String docuName) {
         this.writing = writing;
         this.userName = userName;
         this.time = time;
+        DocuName = docuName;
     }
 
     public String getWriting() {
@@ -38,5 +40,13 @@ public class Reply {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getDocuName() {
+        return DocuName;
+    }
+
+    public void setDocuName(String docuName) {
+        DocuName = docuName;
     }
 }
