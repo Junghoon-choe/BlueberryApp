@@ -1,10 +1,13 @@
 package com.example.blueberryapp;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,11 +34,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_Basket.OnItemClickListener {
 
@@ -50,9 +49,9 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
     private String Cost;
 
 
-    private Button BT_이용후기,BT_매거진,BT_질문답변;
-    private TextView TV_로그아웃,TV_마이페이지,TV_장바구니;
-    private ImageView IV_사진,IV_전화기;
+    private Button BT_이용후기, BT_매거진, BT_질문답변;
+    private TextView TV_로그아웃, TV_마이페이지, TV_장바구니;
+    private ImageView IV_사진, IV_전화기;
     private String 실행 = "실행";
 
     //장바구니 구현
@@ -72,12 +71,12 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
     private CollectionReference foodBasketCRef = UsersCRef.document(MyApplication.회원Email).collection("Basket");
 
 
-
     //장바구니 연산 구현
 //    private EditText ET_itemCounter;
 //    private Button BT_countUp, BT_countDown, BT_deleteItem;
     private TextView TV_totalAmount;
     private LinearLayout BT_payment;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +84,13 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         setContentView(R.layout.activity_a_basket_page);
 
         IV_사진 = findViewById(R.id.IV_사진);
-        BT_이용후기= findViewById(R.id.BT_이용후기);
-        BT_매거진= findViewById(R.id.BT_매거진);
-        BT_질문답변= findViewById(R.id.BT_질문답변);
-        TV_마이페이지= findViewById(R.id.TV_마이페이지);
-        TV_장바구니= findViewById(R.id.TV_장바구니);
-        TV_로그아웃= findViewById(R.id.TV_로그아웃);
-        Log.v("A_basket_onCreate",실행);
+        BT_이용후기 = findViewById(R.id.BT_이용후기);
+        BT_매거진 = findViewById(R.id.BT_매거진);
+        BT_질문답변 = findViewById(R.id.BT_질문답변);
+        TV_마이페이지 = findViewById(R.id.TV_마이페이지);
+        TV_장바구니 = findViewById(R.id.TV_장바구니);
+        TV_로그아웃 = findViewById(R.id.TV_로그아웃);
+        Log.v("A_basket_onCreate", 실행);
         IV_전화기 = findViewById(R.id.IV_전화기);
         imageSwitcher = findViewById(R.id.A장바구니광고창);
         recyclerView = findViewById(R.id.RE_장바구니);
@@ -99,17 +98,19 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         TV_totalAmount = findViewById(R.id.TV_totalCost);
         BT_payment = findViewById(R.id.BT_payment);
 
-
-        Cost = String.valueOf(MyApplication.결제금액);
-
-
+//        MyApplication.총결제금액 = Integer.valueOf(MyApplication.결제금액);
 
 
         BT_payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(A_basket_page.this,"결제 클릭",Toast.LENGTH_SHORT).show();
+                Toast.makeText(A_basket_page.this, "결제 클릭", Toast.LENGTH_SHORT).show();
+                onClick_setting_costume_save();
+
+
             }
+
+
         });
 
         // ArrayList
@@ -120,8 +121,6 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
 
         // Get Data Method
         getDataFromFireStore();
-
-
 
 
         //TODO : Intent로 받은 내용을 리사이클러뷰로 구현하기.
@@ -204,7 +203,6 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         });
 
 
-
         BT_이용후기.setClickable(true);
         BT_이용후기.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,7 +283,6 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         getDataFromFireStore();
 
 
-
     }
 
 
@@ -302,7 +299,7 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 FoodList.clear();
-                MyApplication.결제금액="";
+                MyApplication.결제금액 = "";
                 int count = 0;
 
 
@@ -319,15 +316,45 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
         });
     }
 
+    public void onClick_setting_costume_save(){
+        new AlertDialog.Builder(this)
+                .setTitle("결제 확인창")
+                .setMessage(MyApplication.결제금액+"원 결제 하시겠습니까?")
+                .setIcon(android.R.drawable.star_big_on)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // 확인시 처리 로직
+                        Toast.makeText(A_basket_page.this, "결제가 되었습니다.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }})
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // 취소시 처리 로직
+                        Toast.makeText(A_basket_page.this, "취소하였습니다.", Toast.LENGTH_SHORT).show();
+                    }})
+                .show();
+    }
+
+
+
 
     private void ClearAll() {
+        if (FoodList != null) {
+            FoodList.clear();
+            if (re_foodAdapter_basket != null) {
+                re_foodAdapter_basket.notifyDataSetChanged();
+            }
+        }
+
+        FoodList = new ArrayList<>();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.v("A_basket_onStart", 실행);
-
+//        TV_totalAmount.setText(MyApplication.총결제금액);
+        TV_totalAmount.setText(MyApplication.결제금액);
 
     }
 
@@ -335,13 +362,15 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
     protected void onResume() {
         super.onResume();
         Log.v("A_basket_onResume", 실행);
-        TV_totalAmount.setText(Cost);
+
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.v("A_basket_onPause", 실행);
+        TV_totalAmount.setText("");
     }
 
     @Override
@@ -355,11 +384,12 @@ public class A_basket_page extends AppCompatActivity implements RE_FoodAdapter_B
     protected void onDestroy() {
         super.onDestroy();
         Log.v("A_basket_onDestroy", 실행);
+
     }
 
     @Override
     public void onItemClick(int position) {
-        startActivity(new Intent(A_basket_page.this,A_basket_page.class));
+        startActivity(new Intent(A_basket_page.this, A_basket_page.class));
         finish();
     }
 }

@@ -140,6 +140,7 @@
             android:layout_height="20dp"
             android:layout_marginTop="10dp"
             android:text="적립금"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/선"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -150,6 +151,7 @@
             android:layout_height="20dp"
             android:text="0원"
             android:gravity="right"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/적립금"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -162,14 +164,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/마이페이지"
             app:layout_constraintRight_toLeftOf="@id/IV_주문내역"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="60dp"
             app:srcCompat="@drawable/blueberryicon" />
 
         <ImageView
             android:id="@+id/IV_주문내역"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="60dp"
             android:clickable="true"
             app:layout_constraintLeft_toRightOf="@id/IV_회원정보"
             app:layout_constraintRight_toLeftOf="@id/IV_회원탈퇴신청"
@@ -180,7 +182,7 @@
             android:id="@+id/IV_회원탈퇴신청"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="60dp"
             android:clickable="true"
             app:layout_constraintLeft_toRightOf="@+id/주문내역설명"
             app:layout_constraintRight_toRightOf="parent"
@@ -219,11 +221,11 @@
             android:id="@+id/가로선"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="400dp"
+            android:layout_marginTop="50dp"
             android:background="@color/colordarkgray"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/선" />
+            app:layout_constraintTop_toBottomOf="@id/회원탈퇴신청설명" />
 
 
         <ImageView

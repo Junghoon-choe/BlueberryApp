@@ -148,10 +148,7 @@ public class A_review_page_clicked extends AppCompatActivity {
                     Reply reply = documentSnapshot.toObject(Reply.class);
                     List.add(reply);
                 }
-
-
-                replyAdapter.notifyDataSetChanged();
-
+                                replyAdapter.notifyDataSetChanged();
             }
 
         });

@@ -174,6 +174,7 @@
             <TextView
                 android:id="@+id/TV_totalCost"
                 android:text="100000"
+                android:visibility="gone"
                 android:textSize="30sp"
                 android:textColor="#ffffffff"
                 android:layout_width="wrap_content"
@@ -181,7 +182,7 @@
 
             <TextView
                 android:id="@+id/결제금액"
-                android:text="원 결제하기"
+                android:text="결제하기"
                 android:textSize="30sp"
                 android:textColor="#ffffffff"
                 android:layout_width="wrap_content"

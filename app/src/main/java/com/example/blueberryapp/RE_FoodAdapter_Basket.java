@@ -23,22 +23,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_Basket.ViewHolder> implements OnFoodItemClickListener {
@@ -84,11 +80,12 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
         holder.상품가격.setText(re_foodCurrent.getFoodPrice()); //use for getting Number to adapter
         holder.상품수량.setText(re_foodCurrent.getFoodAmount());
 
+
         //계산 예시
 //        resultPrice = (Integer.parseInt(storePrice) / Integer.parseInt(storeNumber)) * Integer.parseInt(number);
 //        String Price = String.valueOf(resultPrice);
 
-        int itemPrice = Integer.parseInt(re_foodCurrent.getFoodPrice());
+        final int itemPrice = Integer.parseInt(re_foodCurrent.getFoodPrice());
         int totalPrice = itemPrice;
 
 //        MyApplication.결제금액 += String.valueOf(totalPrice);
@@ -104,8 +101,26 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
 
 
         holder.BT_countUp.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
+                                    /*RE_REVIEW_test selectedItem = List.get(position);
+                                    String selectedTitle = selectedItem.getDocuName();
+
+                                    ReviewCRef.document(selectedTitle)
+                                            .delete()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(mContext, "아이템 삭제가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                                                    List.remove(position);
+                                                    notifyItemRemoved(position);
+                                                    notifyItemRangeChanged(position, List.size());
+
+                                                }
+                                            });*/
+
                 try {
 
                     String storeNumber = FoodList.get(position).FoodAmount;
@@ -137,7 +152,10 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+
                                     Toast.makeText(mContext, "수량이 증가 되었습니다.", Toast.LENGTH_SHORT).show();
+
+
                                 }
                             });
 
@@ -167,8 +185,8 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
                     String Price = String.valueOf(resultPrice);
 
 
-                    MyApplication.결제금액 += resultPrice;
-                    Log.d("더하기 금액", "" + resultPrice);
+//                    MyApplication.결제금액 += resultPrice;
+//                    Log.d("더하기 금액", "" + resultPrice);
 
 
                     RE_Food selectedItem = FoodList.get(position);
@@ -188,6 +206,7 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
                                 public void onSuccess(Void aVoid) {
 
                                     Toast.makeText(mContext, "수량이 감소 되었습니다.", Toast.LENGTH_SHORT).show();
+
 
 
                                 }
@@ -227,7 +246,7 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(mContext, "아이템 삭제가 완료되었습니다.", Toast.LENGTH_SHORT).show();
                                                     FoodList.remove(position);
-                                                    notifyItemChanged(position);
+                                                    notifyItemRemoved(position);
                                                     notifyItemRangeChanged(position, FoodList.size());
 
                                                 }
@@ -241,8 +260,6 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
                 builder.show();
             }
         });
-
-
 
 
     }
@@ -265,7 +282,10 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
 
     @Override
     public void onItemClick(int position) {
-
+        this.notifyDataSetChanged();
+        if (foodListener != null) {
+            foodListener.onItemClick(position);
+        }
     }
 
     public void setOnItemClickListener(OnFoodItemClickListener listener) {
@@ -342,6 +362,9 @@ public class RE_FoodAdapter_Basket extends RecyclerView.Adapter<RE_FoodAdapter_B
     public interface OnItemClickListener {
 
         void onItemClick(int position);
+
+
+
 
     }
 

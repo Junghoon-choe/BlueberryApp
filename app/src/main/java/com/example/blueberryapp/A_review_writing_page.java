@@ -225,7 +225,6 @@ public class A_review_writing_page extends AppCompatActivity implements View.OnC
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             mImageUri = data.getData();
-
             Picasso.with(this).load(mImageUri).into(상품사진);
 
         }
